@@ -12,7 +12,7 @@ There are several ways to make this site your own.
 
 **Use Crevio**
 
-The easiest way — manage your products, content, and settings right from your [Crevio dashboard](https://crevio.co). Changes show up on your site automatically.
+The easiest way — manage your products, content, and settings right from your [Crevio dashboard](https://crevio.co/app/dashboard). Changes show up on your site automatically.
 
 **Use your preferred IDE**
 

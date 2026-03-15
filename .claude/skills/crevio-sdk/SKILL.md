@@ -3,30 +3,30 @@ name: crevio-sdk
 description: Create data fetching services using the Crevio SDK. Use this skill when the user asks to fetch data from the Crevio API, create new integration services, or work with Crevio resources like products, orders, customers, or subscriptions.
 ---
 
-This skill guides creation of data fetching services that leverage the Crevio SDK from the `integrations/` folder. Follow established patterns to create type-safe, consistent API integrations.
+This skill guides creation of data fetching services that leverage the Crevio SDK from the `lib/crevio-client.ts`. Follow established patterns to create type-safe, consistent API integrations.
 
 ## SDK Configuration
 
-The Crevio SDK is configured with:
-- **API Key**: `process.env.CREVIO_ACCOUNT_API_KEY`
-- **Server URL**: `https://${window.location.host}/admin/api/v1`
+The Crevio SDK is configured with environment variables:
+- **API Key**: `process.env.CREVIO_API_KEY`
+- **Server URL**: `process.env.CREVIO_API_BASE_URL`
 
 Always use this pattern for creating the client:
 
 ```typescript
 import { Crevio } from "@crevio/sdk";
 
-function createCrevioClient(): Crevio {
-  return new Crevio({
-    apiKeyAuth: process.env.CREVIO_ACCOUNT_API_KEY,
-    serverURL: `https://${window.location.host}/admin/api/v1`,
-  });
-}
+export const crevio = new Crevio({
+	apiKey: process.env.CREVIO_API_KEY,
+	...(process.env.CREVIO_API_BASE_URL && {
+		serverURL: process.env.CREVIO_API_BASE_URL,
+	}),
+});
 ```
 
 ## Service File Structure
 
-Place all integration services in `integrations/<resource>/service.ts`. Each service should:
+Place all integration services in `integrations/crevio/<resource>.ts`. Each service should:
 
 1. **Import the SDK and types**:
    ```typescript
@@ -38,14 +38,11 @@ Place all integration services in `integrations/<resource>/service.ts`. Each ser
 
 3. **Export async functions** for each operation:
    - `getAll<Resource>()` - List all items
-   - `get<Resource>(prefixId: string)` - Get single item by ID
-   - `create<Resource>(data: CreateInput)` - Create new item
-   - `update<Resource>(prefixId: string, data: UpdateInput)` - Update item
-   - `delete<Resource>(prefixId: string)` - Delete item
+   - `get<Resource>(id: string)` - Get single item by ID
 
 ## Reference Implementation
 
-See `integrations/products/service.ts` for the canonical pattern:
+See `integrations/crevio/products.ts` for the canonical pattern:
 
 ```typescript
 import { Crevio } from "@crevio/sdk";
@@ -53,83 +50,47 @@ import type { Product } from "@crevio/sdk/models";
 
 function createCrevioClient(): Crevio {
   return new Crevio({
-    apiKeyAuth: process.env.CREVIO_ACCOUNT_API_KEY,
-    serverURL: `https://${window.location.host}/admin/api/v1`,
+    apiKey: process.env.CREVIO_API_KEY,
+    serverURL: process.env.CREVIO_API_BASE_URL,
   });
 }
 
 export async function getAllProducts(): Promise<Product[]> {
-  try {
-    const crevio = createCrevioClient();
-    const result = await crevio.products.list();
-    return result || [];
-  } catch (error) {
-    console.error("Error fetching products:", error);
-    throw new Error("Failed to load products");
-  }
+  const crevio = createCrevioClient();
+  const response = await crevio.products.list();
+  return response.data ?? [];
 }
 
-export async function getProduct(prefixId: string): Promise<Product> {
-  try {
-    const crevio = createCrevioClient();
-    const result = await crevio.products.get({ prefixId: prefixId });
-    return result;
-  } catch (error) {
-    console.error("Error fetching product:", error);
-    throw new Error(`Failed to load product: ${prefixId}`);
-  }
+export async function getProduct(id: string): Promise<Product> {
+  const crevio = createCrevioClient();
+  return crevio.products.get({ id });
 }
 ```
 
-## Creating New Resource Services
+## Important: List responses
 
-When asked to create a new service for a Crevio resource:
-
-1. **Create the service file**: `integrations/<resource>/service.ts`
-
-2. **Follow the established patterns**:
-   - Use try/catch with descriptive error messages
-   - Return empty arrays for list operations when no results
-   - Use `prefixId` parameter naming for resource identifiers
-   - Add JSDoc comments describing each function
-
-3. **Available SDK methods** (check SDK for exact API):
-   - `crevio.<resource>.list()` - List all
-   - `crevio.<resource>.get({ prefixId })` - Get by ID
-   - `crevio.<resource>.create(data)` - Create new
-   - `crevio.<resource>.update({ prefixId }, data)` - Update
-   - `crevio.<resource>.delete({ prefixId })` - Delete
-
-## Using Services in Next.js
-
-Import and use services in your Next.js components or server actions:
+List endpoints return a paginated response object, not an array directly:
 
 ```typescript
-// In a Server Component
-import { getAllProducts, getProduct } from "@/integrations/products/service";
+// ✅ Correct — access .data from the list response
+const response = await crevio.products.list();
+return response.data ?? [];
 
-export default async function ProductsPage() {
-  const products = await getAllProducts();
-  return <ProductList products={products} />;
-}
-
-// In a dynamic route
-export default async function ProductPage({ params }: { params: { id: string } }) {
-  const product = await getProduct(params.id);
-  return <ProductDetail product={product} />;
-}
+// ❌ Wrong — list() returns { object, data, hasMore, url }, not an array
+return await crevio.products.list();
 ```
 
-## Error Handling
+## Available SDK methods
 
-Always wrap SDK calls in try/catch:
-- Log errors with `console.error` for debugging
-- Throw user-friendly error messages
-- Consider adding error boundaries in consuming components
+Check the SDK source for exact API, but common patterns:
+- `crevio.<resource>.list()` - List all (returns `{ data, hasMore, url }`)
+- `crevio.<resource>.get({ id })` - Get by ID
+- `crevio.<resource>.create(data)` - Create new
+- `crevio.<resource>.update({ id, ...data })` - Update
+- `crevio.<resource>.delete({ id })` - Delete
 
 ## Type Safety
 
 Always import types from `@crevio/sdk/models`:
-- `Product`, `Order`, `Customer`, `Subscription`, etc.
+- `Product`, `Account`, `Order`, `Customer`, `Subscription`, `PriceVariant`, etc.
 - Use these types for function return values and parameters
-- Let TypeScript infer types where possible

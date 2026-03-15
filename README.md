@@ -2,7 +2,7 @@
 
 ## Your place on the internet
 
-This is more than a storefront — it's your corner of the internet to run your business. Your products, your brand, your domain. Connected to your [Crevio](https://crevio.com) account, everything stays in sync automatically.
+This is more than a storefront — it's your corner of the internet to run your business. Your products, your brand, your domain. Connected to your [Crevio](https://crevio.co) account, everything stays in sync automatically.
 
 You create. Crevio runs the business.
 
@@ -12,11 +12,11 @@ There are several ways to make this site your own.
 
 **Use Crevio**
 
-The easiest way — manage your products, content, and settings right from your [Crevio dashboard](https://crevio.com). Changes show up on your site automatically.
+The easiest way — manage your products, content, and settings right from your [Crevio dashboard](https://crevio.co). Changes show up on your site automatically.
 
 **Use your preferred IDE**
 
-If you want full control, clone this repo and work locally. The only requirement is having Node.js installed — [install with nvm](https://github.com/nvm-sh/nvm#installing-and-updating).
+If you want full control, clone this repo and work locally. The only requirement is having Node.js installed — [install with nvm](https://github.co/nvm-sh/nvm#installing-and-updating).
 
 Follow these steps:
 

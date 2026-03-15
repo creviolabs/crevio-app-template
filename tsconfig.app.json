@@ -25,11 +25,12 @@
     "strict": false,
     "target": "ES2020",
     "types": [
-      "vitest/globals"
+      "bun-types"
     ],
     "useDefineForClassFields": true
   },
   "include": [
-    "src"
+    "src",
+    "worker-configuration.d.ts"
   ]
 }

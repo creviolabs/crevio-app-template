@@ -7,7 +7,16 @@
 	},
 	"files": {
 		"ignoreUnknown": true,
-		"includes": ["**", "!cloudflare-env.d.ts"]
+		"includes": [
+			"**",
+			"!**/package.json",
+			"!**/bun.lockb",
+			"!**/components/ui",
+			"!**/hooks/use-mobile.ts",
+			"!**/*.css",
+			"!cloudflare-env.d.ts",
+			"!worker-configuration.d.ts"
+		]
 	},
 	"css": {
 		"parser": {
@@ -25,6 +34,12 @@
 			"recommended": true
 		}
 	},
+	"overrides": [
+		{
+			"includes": ["src/components/ui/**"],
+			"linter": { "enabled": false }
+		}
+	],
 	"javascript": {
 		"formatter": {
 			"quoteStyle": "double"

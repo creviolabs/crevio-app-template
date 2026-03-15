@@ -1,15 +1,2 @@
-import "@testing-library/jest-dom";
-
-Object.defineProperty(window, "matchMedia", {
-  writable: true,
-  value: (query: string) => ({
-    matches: false,
-    media: query,
-    onchange: null,
-    addListener: () => {},
-    removeListener: () => {},
-    addEventListener: () => {},
-    removeEventListener: () => {},
-    dispatchEvent: () => {},
-  }),
-});
+// Bun test setup
+// Add global test utilities or DOM polyfills here as needed

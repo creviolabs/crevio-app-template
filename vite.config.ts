@@ -1,24 +1,15 @@
-import path from "node:path";
 import { cloudflare } from "@cloudflare/vite-plugin";
+import { reactRouter } from "@react-router/dev/vite";
 import tailwindcss from "@tailwindcss/vite";
-import react from "@vitejs/plugin-react";
 import { defineConfig } from "vite";
 
 export default defineConfig(() => ({
-	server: {
-		host: "::",
-		port: 8080,
-		hmr: {
-			overlay: false,
-		},
-	},
-	build: {
-		outDir: "dist/client",
-	},
-	plugins: [tailwindcss(), react(), cloudflare()],
+	plugins: [
+		cloudflare({ viteEnvironment: { name: "ssr" } }),
+		tailwindcss(),
+		reactRouter(),
+	],
 	resolve: {
-		alias: {
-			"@": path.resolve(__dirname, "./src"),
-		},
+		tsconfigPaths: true,
 	},
 }));

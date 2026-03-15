@@ -49,7 +49,7 @@ export default function BlogPost({ loaderData }: Route.ComponentProps) {
 				<article className="container py-14 max-w-3xl mx-auto">
 					<Link
 						to="/blog"
-						className="group inline-flex items-center gap-1.5 text-sm text-muted-foreground transition-colors hover:text-foreground mb-10"
+						className="group inline-flex items-center gap-1.5 text-sm text-muted-foreground transition-colors hover:text-foreground mb-5"
 					>
 						<ArrowLeft className="size-3.5 transition-transform group-hover:-translate-x-0.5" />
 						Blog
@@ -61,14 +61,11 @@ export default function BlogPost({ loaderData }: Route.ComponentProps) {
 						</h1>
 						{post.publishedAt && (
 							<time className="mt-3 block text-sm text-muted-foreground">
-								{new Date(post.publishedAt).toLocaleDateString(
-									"en-US",
-									{
-										month: "long",
-										day: "numeric",
-										year: "numeric",
-									},
-								)}
+								{new Date(post.publishedAt).toLocaleDateString("en-US", {
+									month: "long",
+									day: "numeric",
+									year: "numeric",
+								})}
 							</time>
 						)}
 					</header>
@@ -81,10 +78,7 @@ export default function BlogPost({ loaderData }: Route.ComponentProps) {
 				</article>
 			</main>
 
-			<StoreFooter
-				storeName={account.name}
-				socialLinks={account.socialLinks}
-			/>
+			<StoreFooter storeName={account.name} socialLinks={account.socialLinks} />
 		</div>
 	);
 }

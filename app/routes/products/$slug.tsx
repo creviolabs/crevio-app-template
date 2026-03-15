@@ -132,7 +132,6 @@ interface PriceVariant {
 	benefits?: string[] | null;
 }
 
-
 function ProductJsonLd({
 	product,
 	currency,
@@ -226,7 +225,7 @@ export default function ProductDetail({ loaderData }: Route.ComponentProps) {
 					<div className="max-w-5xl mx-auto">
 						<Link
 							to="/"
-							className="group inline-flex items-center gap-1.5 text-sm text-muted-foreground transition-colors hover:text-foreground mb-10"
+							className="group inline-flex items-center gap-1.5 text-sm text-muted-foreground transition-colors hover:text-foreground mb-5"
 						>
 							<ArrowLeft className="size-3.5 transition-transform group-hover:-translate-x-0.5" />
 							Back

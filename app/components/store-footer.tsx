@@ -1,9 +1,4 @@
-import {
-	Globe,
-	Mail,
-	MessageCircle,
-	type LucideIcon,
-} from "lucide-react";
+import { Globe, type LucideIcon, Mail, MessageCircle } from "lucide-react";
 
 const platformIcons: Record<string, LucideIcon> = {
 	email: Mail,
@@ -45,7 +40,10 @@ interface StoreFooterProps {
 function SocialIcon({
 	platform,
 	className,
-}: { platform: string; className?: string }) {
+}: {
+	platform: string;
+	className?: string;
+}) {
 	const LucideIcon = platformIcons[platform];
 	if (LucideIcon) {
 		return <LucideIcon className={className} />;
@@ -71,7 +69,7 @@ function SocialIcon({
 export function StoreFooter({ storeName, socialLinks }: StoreFooterProps) {
 	return (
 		<footer className="mt-auto border-t border-border/40 bg-muted/30">
-			<div className="container py-10">
+			<div className="container py-6">
 				<div className="flex flex-col items-center gap-5">
 					{socialLinks && socialLinks.length > 0 && (
 						<div className="flex items-center gap-1">
@@ -84,7 +82,10 @@ export function StoreFooter({ storeName, socialLinks }: StoreFooterProps) {
 									aria-label={link.platform}
 									className="flex items-center justify-center rounded-lg p-2.5 text-muted-foreground transition-colors hover:bg-accent hover:text-foreground"
 								>
-									<SocialIcon platform={link.platform} className="size-[18px]" />
+									<SocialIcon
+										platform={link.platform}
+										className="size-[18px]"
+									/>
 								</a>
 							))}
 						</div>

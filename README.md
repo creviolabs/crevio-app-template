@@ -16,7 +16,7 @@ The easiest way — manage your products, content, and settings right from your 
 
 **Use your preferred IDE**
 
-If you want full control, clone this repo and work locally. The only requirement is having Node.js installed — [install with nvm](https://github.co/nvm-sh/nvm#installing-and-updating).
+If you want full control, clone this repo and work locally. The only requirement is having Bun installed — [install Bun](https://bun.sh/docs/installation).
 
 Follow these steps:
 
@@ -28,13 +28,13 @@ git clone <YOUR_GIT_URL>
 cd <YOUR_PROJECT_NAME>
 
 # Step 3: Install the necessary dependencies.
-npm install
+bun install
 
 # Step 4: Add your API key to .dev.vars
 # CREVIO_API_KEY=your_api_key_here
 
 # Step 5: Start the development server with auto-reloading and an instant preview.
-npm run dev
+bun run dev
 ```
 
 **Edit a file directly in GitHub**
@@ -66,7 +66,7 @@ This project is built with:
 One command puts your site live on the edge — fast everywhere, scales to zero.
 
 ```sh
-npm run deploy
+bun run deploy
 ```
 
 This deploys to [Cloudflare Workers](https://workers.cloudflare.com/). No servers to manage, no infrastructure to worry about.
@@ -85,8 +85,8 @@ Read more here: [Cloudflare Custom Domains](https://developers.cloudflare.com/wo
 
 | Command | Description |
 |---------|-------------|
-| `npm run dev` | Start development server |
-| `npm run build` | Production build |
-| `npm run deploy` | Build and deploy to Cloudflare Workers |
-| `npm run typecheck` | Run type checking |
-| `npm run check` | Run Biome checks |
+| `bun run dev` | Start development server |
+| `bun run build` | Production build |
+| `bun run deploy` | Build and deploy to Cloudflare Workers |
+| `bun run typecheck` | Run type checking |
+| `bun run check` | Run Biome checks |

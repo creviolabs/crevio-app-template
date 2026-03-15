@@ -17,7 +17,7 @@
 		"test": "bun test"
 	},
 	"dependencies": {
-		"@crevio/sdk": "../crevio-js",
+		"@crevio/sdk": "0.4.7",
 		"@base-ui/react": "^1.3.0",
 		"@fontsource-variable/geist": "^5.2.8",
 		"@tanstack/react-query": "^5.90.21",

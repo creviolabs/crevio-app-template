@@ -17,14 +17,14 @@ export default defineConfig(({ mode }) => ({
 		tailwindcss(),
 		...crevioPlugins({
 			APP_ID: process.env.CREVIO_ACCOUNT_ID,
-			APP_URL: process.env.CREVIO_ACCOUNT_URL,
-			ORIGIN: "https://crevio.app",
+			APP_URL: process.env.CREVIO_APP_URL,
+			ORIGIN: "*",
 			SHOW_WATERMARK: mode === "production",
 			NODE_ENV: mode,
 			DEBUG_LOGS: mode === "development" ? "true" : undefined,
 			ANALYTICS_SCRIPT_ATTRS: JSON.stringify({
 				src: "https://static.crevio.co/analytics.js",
-				"data-domain": process.env.CREVIO_ACCOUNT_URL,
+				"data-domain": process.env.CREVIO_APP_URL,
 			}),
 		}),
 		reactRouter(),

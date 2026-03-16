@@ -20,7 +20,6 @@ interface Product {
 	priceVariants: PriceVariant[];
 	reviewsCount: number;
 	averageRating: number | null;
-	totalSold: number;
 }
 
 export function ProductCard({

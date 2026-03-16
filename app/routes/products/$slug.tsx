@@ -1,4 +1,4 @@
-import { ArrowLeft, Check, Clock, ShoppingBag, Star } from "lucide-react";
+import { ArrowLeft, Check, Clock, Star } from "lucide-react";
 import { useState } from "react";
 import { Link } from "react-router";
 import { ProductCard } from "@/components/product-card";
@@ -295,12 +295,6 @@ export default function ProductDetail({ loaderData }: Route.ComponentProps) {
 												</div>
 											)}
 
-											{product.totalSold > 0 && (
-												<span className="flex items-center gap-1 text-xs text-muted-foreground">
-													<ShoppingBag className="size-3" />
-													{product.totalSold.toLocaleString()} sold
-												</span>
-											)}
 
 											{product.availableUntil && (
 												<Badge

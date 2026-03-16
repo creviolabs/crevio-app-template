@@ -18,7 +18,7 @@ export default defineConfig(({ mode }) => ({
 		...crevioPlugins({
 			APP_ID: process.env.CREVIO_ACCOUNT_ID,
 			APP_URL: process.env.CREVIO_APP_URL,
-			ORIGIN: process.env.CREVIO_APP_URL,
+			ORIGIN: "*",
 			SHOW_WATERMARK: mode === "production",
 			NODE_ENV: mode,
 			DEBUG_LOGS: mode === "development" ? "true" : "false",

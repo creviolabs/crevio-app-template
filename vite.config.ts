@@ -1,9 +1,10 @@
 import { cloudflare } from "@cloudflare/vite-plugin";
+import { crevioPlugins } from "@crevio/vite-plugins";
 import { reactRouter } from "@react-router/dev/vite";
 import tailwindcss from "@tailwindcss/vite";
 import { defineConfig } from "vite";
 
-export default defineConfig(() => ({
+export default defineConfig(({ mode }) => ({
 	server: {
 		host: "::",
 		port: 5173,
@@ -14,6 +15,18 @@ export default defineConfig(() => ({
 	plugins: [
 		cloudflare({ viteEnvironment: { name: "ssr" } }),
 		tailwindcss(),
+		...crevioPlugins({
+			APP_ID: process.env.CREVIO_ACCOUNT_ID,
+			APP_URL: process.env.CREVIO_ACCOUNT_URL,
+			ORIGIN: "https://crevio.app",
+			SHOW_WATERMARK: mode === "production",
+			NODE_ENV: mode,
+			DEBUG_LOGS: mode === "development" ? "true" : undefined,
+			ANALYTICS_SCRIPT_ATTRS: JSON.stringify({
+				src: "https://static.crevio.co/analytics.js",
+				"data-domain": process.env.CREVIO_ACCOUNT_URL,
+			}),
+		}),
 		reactRouter(),
 	],
 	resolve: {

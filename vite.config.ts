@@ -4,6 +4,13 @@ import tailwindcss from "@tailwindcss/vite";
 import { defineConfig } from "vite";
 
 export default defineConfig(() => ({
+	server: {
+		host: "::",
+		port: 5173,
+		hmr: {
+			overlay: false,
+		},
+	},
 	plugins: [
 		cloudflare({ viteEnvironment: { name: "ssr" } }),
 		tailwindcss(),

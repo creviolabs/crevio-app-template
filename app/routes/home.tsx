@@ -59,7 +59,8 @@ export async function loader({ request, context }: Route.LoaderArgs) {
 			},
 			products: [],
 			hasMore: false,
-			error: "Could not connect to Crevio. Check your API key in .dev.vars.",
+			error:
+				"Couldn't connect to your Crevio account. Try asking AI to help fix it, or reach out to support if you're still stuck.",
 		};
 	}
 }
@@ -152,7 +153,11 @@ export default function Home({ loaderData }: Route.ComponentProps) {
 					<>
 						<div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-x-5 gap-y-10">
 							{products.map((product) => (
-								<ProductCard key={product.id} product={product} currency={account.displayCurrency} />
+								<ProductCard
+									key={product.id}
+									product={product}
+									currency={account.displayCurrency}
+								/>
 							))}
 						</div>
 
@@ -182,10 +187,7 @@ export default function Home({ loaderData }: Route.ComponentProps) {
 				)}
 			</main>
 
-			<StoreFooter
-				storeName={account.name}
-				socialLinks={account.socialLinks}
-			/>
+			<StoreFooter storeName={account.name} socialLinks={account.socialLinks} />
 		</div>
 	);
 }

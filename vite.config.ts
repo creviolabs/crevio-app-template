@@ -19,7 +19,7 @@ export default defineConfig(({ mode }) => ({
 			APP_ID: process.env.CREVIO_ACCOUNT_ID,
 			APP_URL: process.env.CREVIO_APP_URL,
 			ORIGIN: "*",
-			SHOW_WATERMARK: mode === "production",
+			SHOW_WATERMARK: process.env.SHOW_WATERMARK !== undefined ? process.env.SHOW_WATERMARK === "true" : mode === "production",
 			NODE_ENV: mode,
 			DEBUG_LOGS: mode === "development" ? "true" : "false",
 			ANALYTICS_SCRIPT_ATTRS: JSON.stringify({

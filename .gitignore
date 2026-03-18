@@ -1,5 +1,7 @@
-.DS_Store
-.env
+# Dotfiles and dotdirs
+.*
+!.env.example
+
 /node_modules/
 *.tsbuildinfo
 
@@ -8,7 +10,4 @@
 /build/
 
 # Cloudflare
-.mf
-.wrangler
-.dev.vars*
 worker-configuration.d.ts

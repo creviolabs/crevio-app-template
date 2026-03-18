@@ -15,7 +15,8 @@
 			"!**/hooks/use-mobile.ts",
 			"!**/*.css",
 			"!cloudflare-env.d.ts",
-			"!worker-configuration.d.ts"
+			"!worker-configuration.d.ts",
+			"!.*"
 		]
 	},
 	"css": {

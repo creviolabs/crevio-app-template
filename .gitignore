@@ -1,6 +1,7 @@
 # Dotfiles and dotdirs
 .*
 !.env.example
+!.claude
 
 /node_modules/
 *.tsbuildinfo

@@ -2,7 +2,7 @@
 
 ## Your place on the internet
 
-This is more than a storefront — it's your corner of the internet to run your business. Your products, your brand, your domain. Connected to your [Crevio](https://crevio.co) account, everything stays in sync automatically.
+This is more than a storefront — it's your AI-powered business running on autopilot. Your products, your brand, your domain. Connected to your [Crevio](https://crevio.co) account, everything stays in sync automatically.
 
 You create. Crevio runs the business.
 

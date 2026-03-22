@@ -5,13 +5,7 @@ import Link from "next/link";
 import { formatInterval, formatPrice } from "@/lib/format-price";
 import { isImageMedia } from "@/lib/media";
 
-export function ProductCard({
-	product,
-	currency = "usd",
-}: {
-	product: Product;
-	currency?: string;
-}) {
+export function ProductCard({ product }: { product: Product }) {
 	const firstImage = product.mediaGallery?.find(isImageMedia);
 	const lowestVariant = product.priceVariants
 		.filter((v) => v.amountType !== "custom")
@@ -73,14 +67,14 @@ export function ProductCard({
 								<span className="text-muted-foreground/50 line-through mr-1">
 									{formatPrice(
 										lowestVariant.discountedFromAmount,
-										lowestVariant.currency ?? currency,
+										lowestVariant.currency ?? "usd",
 									)}
 								</span>
 							)}
 							<span className="font-medium">
 								{formatPrice(
 									lowestVariant.amount,
-									lowestVariant.currency ?? currency,
+									lowestVariant.currency ?? "usd",
 								)}
 							</span>
 							{isSubscription && (

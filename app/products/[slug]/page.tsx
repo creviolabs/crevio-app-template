@@ -12,20 +12,6 @@ import { formatInterval, formatPrice } from "@/lib/format-price";
 import { isImageMedia } from "@/lib/media";
 import { ProductImageGallery } from "./product-image-gallery";
 
-async function loadProductPage(slug: string) {
-	const [account, product, productList] = await Promise.all([
-		getAccount(),
-		getProduct(slug, "reviews"),
-		getActiveProducts(4),
-	]);
-
-	const relatedProducts = productList.data
-		.filter((p) => p.id !== product.id)
-		.slice(0, 3);
-
-	return { account, product, relatedProducts };
-}
-
 export async function generateMetadata({
 	params,
 }: {
@@ -34,7 +20,10 @@ export async function generateMetadata({
 	const { slug } = await params;
 
 	try {
-		const { account, product } = await loadProductPage(slug);
+		const [account, product] = await Promise.all([
+			getAccount(),
+			getProduct(slug, "reviews"),
+		]);
 		const seo =
 			product.seo && typeof product.seo === "object" ? product.seo : null;
 		const firstImage = product.mediaGallery?.find(isImageMedia);
@@ -72,10 +61,8 @@ function StarRating({ rating }: { rating: number }) {
 
 function ProductJsonLd({
 	product,
-	currency,
 }: {
 	product: Product;
-	currency: string;
 }) {
 	const lowestVariant = product.priceVariants
 		.filter(
@@ -104,11 +91,7 @@ function ProductJsonLd({
 			offers: {
 				"@type": "Offer",
 				price: ((lowestVariant.amount ?? 0) / 100).toFixed(2),
-				priceCurrency: (
-					lowestVariant.currency ??
-					currency ??
-					"USD"
-				).toUpperCase(),
+				priceCurrency: (lowestVariant.currency ?? "USD").toUpperCase(),
 				availability: "https://schema.org/InStock",
 			},
 		}),
@@ -130,26 +113,31 @@ export default async function ProductPage({
 }) {
 	const { slug } = await params;
 
-	let data: Awaited<ReturnType<typeof loadProductPage>>;
+	let product: Awaited<ReturnType<typeof getProduct>>;
+	let relatedProducts: Awaited<ReturnType<typeof getActiveProducts>>["data"];
 	try {
-		data = await loadProductPage(slug);
+		const [p, productList] = await Promise.all([
+			getProduct(slug, "reviews"),
+			getActiveProducts(4),
+		]);
+		product = p;
+		relatedProducts = productList.data
+			.filter((r) => r.id !== p.id)
+			.slice(0, 3);
 	} catch {
 		notFound();
 	}
 
-	const { account, product, relatedProducts } = data;
-	const currency = account.displayCurrency ?? "usd";
-
 	const images = product.mediaGallery.filter(isImageMedia);
 
 	const visibleVariants = product.priceVariants.filter(
-		(v) => !v.hidden && !v.archived,
+		(v: PriceVariant) => !v.hidden && !v.archived,
 	);
 	const reviews = product.reviews ?? [];
 
 	return (
 		<>
-			<ProductJsonLd product={product} currency={currency} />
+			<ProductJsonLd product={product} />
 			<div className="container py-10">
 				<div className="max-w-5xl mx-auto">
 						<Link
@@ -224,7 +212,7 @@ export default async function ProductPage({
 											{visibleVariants.map((variant: PriceVariant) => {
 												const hasBenefits =
 													variant.benefits && variant.benefits.length > 0;
-												const variantCurrency = variant.currency ?? currency;
+												const variantCurrency = variant.currency ?? "usd";
 
 												return (
 													<div

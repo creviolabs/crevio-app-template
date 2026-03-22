@@ -4,18 +4,13 @@ import Link from "next/link";
 import { notFound } from "next/navigation";
 import { StoreFooter } from "@/components/store-footer";
 import { StoreHeader } from "@/components/store-header";
-import { getAccount, getBlogPost, getPublishedBlogPosts } from "@/lib/data";
+import { getAccount, getBlogPost } from "@/lib/data";
 
-async function findPostBySlug(slug: string) {
-	const [account, postList] = await Promise.all([
+async function loadBlogPostPage(slug: string) {
+	const [account, post] = await Promise.all([
 		getAccount(),
-		getPublishedBlogPosts(),
+		getBlogPost(slug),
 	]);
-
-	const match = postList.data.find((p) => p.slug === slug);
-	if (!match) return null;
-
-	const post = await getBlogPost(match.id);
 	return { account, post };
 }
 
@@ -27,12 +22,10 @@ export async function generateMetadata({
 	const { slug } = await params;
 
 	try {
-		const data = await findPostBySlug(slug);
-		if (!data) return { title: "Post not found" };
-
+		const { account, post } = await loadBlogPostPage(slug);
 		return {
-			title: `${data.post.title} — ${data.account.name}`,
-			description: data.post.excerpt || "",
+			title: `${post.title} — ${account.name}`,
+			description: post.excerpt || "",
 		};
 	} catch {
 		return { title: "Post not found" };
@@ -45,8 +38,13 @@ export default async function BlogPost({
 	params: Promise<{ slug: string }>;
 }) {
 	const { slug } = await params;
-	const data = await findPostBySlug(slug);
-	if (!data) notFound();
+
+	let data: Awaited<ReturnType<typeof loadBlogPostPage>>;
+	try {
+		data = await loadBlogPostPage(slug);
+	} catch {
+		notFound();
+	}
 
 	const { account, post } = data;
 

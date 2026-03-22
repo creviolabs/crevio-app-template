@@ -3,7 +3,7 @@ import type { Metadata } from "next";
 import Link from "next/link";
 import { StoreFooter } from "@/components/store-footer";
 import { StoreHeader } from "@/components/store-header";
-import { getAccount, getPublishedBlogPosts } from "@/lib/data";
+import { getAccount, getBlogPosts } from "@/lib/data";
 
 export async function generateMetadata(): Promise<Metadata> {
 	try {
@@ -18,7 +18,7 @@ export async function generateMetadata(): Promise<Metadata> {
 }
 
 export default async function BlogIndex() {
-	const data = await Promise.all([getAccount(), getPublishedBlogPosts()]).catch(
+	const data = await Promise.all([getAccount(), getBlogPosts()]).catch(
 		(e: unknown) => {
 			console.error("Failed to load blog:", e);
 			return null;

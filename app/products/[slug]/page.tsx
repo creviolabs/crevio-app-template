@@ -14,16 +14,13 @@ import { formatInterval, formatPrice } from "@/lib/format-price";
 import { isImageMedia } from "@/lib/media";
 import { ProductImageGallery } from "./product-image-gallery";
 
-async function findProductBySlug(slug: string) {
-	const [account, productList] = await Promise.all([
+async function loadProductPage(slug: string) {
+	const [account, product, productList] = await Promise.all([
 		getAccount(),
-		getActiveProducts(),
+		getProduct(slug, "reviews"),
+		getActiveProducts(4),
 	]);
 
-	const match = productList.data.find((p) => p.slug === slug);
-	if (!match) return null;
-
-	const product = await getProduct(match.id, "reviews");
 	const relatedProducts = productList.data
 		.filter((p) => p.id !== product.id)
 		.slice(0, 3);
@@ -39,10 +36,7 @@ export async function generateMetadata({
 	const { slug } = await params;
 
 	try {
-		const data = await findProductBySlug(slug);
-		if (!data) return { title: "Product not found" };
-
-		const { account, product } = data;
+		const { account, product } = await loadProductPage(slug);
 		const seo =
 			product.seo && typeof product.seo === "object" ? product.seo : null;
 		const firstImage = product.mediaGallery?.find(isImageMedia);
@@ -137,8 +131,13 @@ export default async function ProductPage({
 	params: Promise<{ slug: string }>;
 }) {
 	const { slug } = await params;
-	const data = await findProductBySlug(slug);
-	if (!data) notFound();
+
+	let data: Awaited<ReturnType<typeof loadProductPage>>;
+	try {
+		data = await loadProductPage(slug);
+	} catch {
+		notFound();
+	}
 
 	const { account, product, relatedProducts } = data;
 	const currency = account.displayCurrency ?? "usd";

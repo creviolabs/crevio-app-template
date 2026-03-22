@@ -1,4 +1,3 @@
-import { BlogPostStatus } from "@crevio/sdk/models";
 import { cacheLife } from "next/cache";
 import { createCrevioClient } from "./crevio-client";
 
@@ -23,27 +22,23 @@ export async function getActiveProducts(
 	});
 }
 
-export async function getProduct(id: string, expand?: string) {
+export async function getProduct(slugOrId: string, expand?: string) {
 	"use cache";
 	cacheLife("minutes");
 	const crevio = createCrevioClient();
-	return crevio.products.get({ id, ...(expand && { expand }) });
+	return crevio.products.get({ idOrSlug: slugOrId, ...(expand && { expand }) });
 }
 
-export async function getPublishedBlogPosts() {
+export async function getBlogPosts() {
 	"use cache";
 	cacheLife("minutes");
 	const crevio = createCrevioClient();
-	const result = await crevio.blogPosts.list();
-	return {
-		...result,
-		data: result.data.filter((p) => p.status === BlogPostStatus.Published),
-	};
+	return crevio.blogPosts.list();
 }
 
-export async function getBlogPost(id: string) {
+export async function getBlogPost(slugOrId: string) {
 	"use cache";
 	cacheLife("minutes");
 	const crevio = createCrevioClient();
-	return crevio.blogPosts.get({ id });
+	return crevio.blogPosts.get({ idOrSlug: slugOrId });
 }

@@ -3,8 +3,6 @@ import type { Metadata } from "next";
 import Image from "next/image";
 import Link from "next/link";
 import { ProductCard } from "@/components/product-card";
-import { StoreFooter } from "@/components/store-footer";
-import { StoreHeader } from "@/components/store-header";
 import { getAccount, getActiveProducts } from "@/lib/data";
 
 const PAGE_SIZE = 9;
@@ -49,12 +47,7 @@ export default async function Home({
 			: null;
 
 	return (
-		<div className="min-h-screen flex flex-col">
-			<StoreHeader
-				storeName={account?.name ?? "Store"}
-				avatarUrl={account?.avatarUrl ?? null}
-			/>
-
+		<>
 			{isFirstPage && account && (
 				<div className="container pt-14 pb-10">
 					{account.avatarUrl ? (
@@ -83,7 +76,7 @@ export default async function Home({
 				</div>
 			)}
 
-			<main className="container pb-16 flex-1">
+			<div className="container pb-16">
 				{emptyMessage ? (
 					<div className="flex flex-col items-center justify-center py-24 gap-4">
 						<Package className="size-8 text-muted-foreground/40" />
@@ -124,12 +117,7 @@ export default async function Home({
 						)}
 					</>
 				)}
-			</main>
-
-			<StoreFooter
-				storeName={account?.name ?? "Store"}
-				socialLinks={account?.socialLinks ?? []}
-			/>
-		</div>
+			</div>
+		</>
 	);
 }

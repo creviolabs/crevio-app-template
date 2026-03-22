@@ -1,11 +1,16 @@
 import { IframeNavigationHandler } from "@/components/iframe-navigation-handler";
+import { StoreFooter } from "@/components/store-footer";
+import { StoreHeader } from "@/components/store-header";
+import { getAccount } from "@/lib/data";
 import "./app.css";
 
-export default function RootLayout({
+export default async function RootLayout({
 	children,
 }: {
 	children: React.ReactNode;
 }) {
+	const account = await getAccount().catch(() => null);
+
 	return (
 		<html lang="en">
 			<head>
@@ -14,7 +19,17 @@ export default function RootLayout({
 			</head>
 			<body>
 				<IframeNavigationHandler />
-				{children}
+				<div className="min-h-screen flex flex-col">
+					<StoreHeader
+						storeName={account?.name ?? "Store"}
+						avatarUrl={account?.avatarUrl ?? null}
+					/>
+					<main className="flex-1">{children}</main>
+					<StoreFooter
+						storeName={account?.name ?? "Store"}
+						socialLinks={account?.socialLinks ?? []}
+					/>
+				</div>
 			</body>
 		</html>
 	);

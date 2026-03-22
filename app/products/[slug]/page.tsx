@@ -5,8 +5,6 @@ import Image from "next/image";
 import Link from "next/link";
 import { notFound } from "next/navigation";
 import { ProductCard } from "@/components/product-card";
-import { StoreFooter } from "@/components/store-footer";
-import { StoreHeader } from "@/components/store-header";
 import { Badge } from "@/components/ui/badge";
 import { Button } from "@/components/ui/button";
 import { getAccount, getActiveProducts, getProduct } from "@/lib/data";
@@ -150,13 +148,10 @@ export default async function ProductPage({
 	const reviews = product.reviews ?? [];
 
 	return (
-		<div className="min-h-screen flex flex-col">
+		<>
 			<ProductJsonLd product={product} currency={currency} />
-			<StoreHeader storeName={account.name} avatarUrl={account.avatarUrl} />
-
-			<main className="flex-1">
-				<div className="container py-10">
-					<div className="max-w-5xl mx-auto">
+			<div className="container py-10">
+				<div className="max-w-5xl mx-auto">
 						<Link
 							href="/"
 							className="group inline-flex items-center gap-1.5 text-sm text-muted-foreground transition-colors hover:text-foreground mb-5"
@@ -362,13 +357,7 @@ export default async function ProductPage({
 							</section>
 						)}
 					</div>
-				</div>
-			</main>
-
-			<StoreFooter
-				storeName={account.name}
-				socialLinks={account.socialLinks}
-			/>
-		</div>
+			</div>
+		</>
 	);
 }

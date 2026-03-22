@@ -1,7 +1,18 @@
 {
   "$schema": "node_modules/wrangler/config-schema.json",
-  "name": "react-router-app",
-  "compatibility_date": "2025-04-04",
-  "main": "./workers/app.ts",
-  "vars": {}
+  "name": "crevio-app-template",
+  "account_id": "ec52a25b3563ea3a73535364336a19b2",
+  "compatibility_date": "2026-03-22",
+  "compatibility_flags": [
+    "nodejs_compat"
+  ],
+  "main": "./worker/index.ts",
+  "assets": {
+    "directory": "dist/client",
+    "not_found_handling": "none",
+    "binding": "ASSETS"
+  },
+  "images": {
+    "binding": "IMAGES"
+  }
 }

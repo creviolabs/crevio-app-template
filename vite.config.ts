@@ -1,7 +1,7 @@
 import { cloudflare } from "@cloudflare/vite-plugin";
 import { crevioPlugins } from "@crevio/vite-plugins";
-import { reactRouter } from "@react-router/dev/vite";
 import tailwindcss from "@tailwindcss/vite";
+import vinext from "vinext";
 import { defineConfig } from "vite";
 
 export default defineConfig(({ mode }) => ({
@@ -13,13 +13,19 @@ export default defineConfig(({ mode }) => ({
 		},
 	},
 	plugins: [
-		cloudflare({ viteEnvironment: { name: "ssr" } }),
+		vinext(),
+		cloudflare({
+			viteEnvironment: { name: "rsc", childEnvironments: ["ssr"] },
+		}),
 		tailwindcss(),
 		...crevioPlugins({
 			APP_ID: process.env.CREVIO_ACCOUNT_ID,
 			APP_URL: process.env.CREVIO_APP_URL,
 			ORIGIN: "*",
-			SHOW_WATERMARK: process.env.SHOW_WATERMARK !== undefined ? process.env.SHOW_WATERMARK === "true" : mode === "production",
+			SHOW_WATERMARK:
+				process.env.SHOW_WATERMARK !== undefined
+					? process.env.SHOW_WATERMARK === "true"
+					: mode === "production",
 			NODE_ENV: mode,
 			DEBUG_LOGS: mode === "development" ? "true" : "false",
 			ANALYTICS_SCRIPT_ATTRS: JSON.stringify({
@@ -27,9 +33,5 @@ export default defineConfig(({ mode }) => ({
 				"data-domain": process.env.CREVIO_APP_URL,
 			}),
 		}),
-		reactRouter(),
 	],
-	resolve: {
-		tsconfigPaths: true,
-	},
 }));

@@ -6,7 +6,7 @@ import Link from "next/link";
 import { notFound } from "next/navigation";
 import { ProductCard } from "@/components/product-card";
 import { Badge } from "@/components/ui/badge";
-import { Button } from "@/components/ui/button";
+import { buttonVariants } from "@/components/ui/button";
 import { getAccount, getActiveProducts, getProduct } from "@/lib/data";
 import { formatInterval, formatPrice } from "@/lib/format-price";
 import { isImageMedia } from "@/lib/media";
@@ -206,7 +206,7 @@ export default async function ProductPage({
 										</p>
 									) : null}
 
-	
+
 									{visibleVariants.length > 0 && (
 										<div className="space-y-2 pt-1">
 											{visibleVariants.map((variant: PriceVariant) => {
@@ -259,13 +259,16 @@ export default async function ProductPage({
 																</p>
 															</div>
 
-															<Button size="sm" className="shrink-0">
+															<a
+																href={variant.purchaseUrl}
+																className={buttonVariants({ size: "lg" })}
+															>
 																{variant.waitlist
 																	? "Join waitlist"
 																	: variant.amountType === "free"
 																		? "Get for free"
 																		: product.buttonCta || "Buy now"}
-															</Button>
+															</a>
 														</div>
 
 														{hasBenefits && (
@@ -290,7 +293,7 @@ export default async function ProductPage({
 							</div>
 						</div>
 
-	
+
 						{reviews.length > 0 && (
 							<section className="mt-20 pt-10 border-t border-border/40">
 								<h2 className="text-sm font-medium text-muted-foreground mb-8">
@@ -331,7 +334,7 @@ export default async function ProductPage({
 							</section>
 						)}
 
-	
+
 						{relatedProducts.length > 0 && (
 							<section className="mt-20 pt-10 border-t border-border/40">
 								<h2 className="text-sm font-medium text-muted-foreground mb-8">

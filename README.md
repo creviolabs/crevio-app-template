@@ -30,7 +30,7 @@ cd <YOUR_PROJECT_NAME>
 # Step 3: Install the necessary dependencies.
 bun install
 
-# Step 4: Add your API key to .dev.vars
+# Step 4: Add your API key to .env.local
 # CREVIO_API_KEY=your_api_key_here
 
 # Step 5: Start the development server with auto-reloading and an instant preview.

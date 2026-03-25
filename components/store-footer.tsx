@@ -1,4 +1,5 @@
 import { Globe, type LucideIcon, Mail, MessageCircle } from "lucide-react";
+import Link from "next/link";
 
 const platformIcons: Record<string, LucideIcon> = {
 	email: Mail,
@@ -32,9 +33,15 @@ interface SocialLink {
 	url: string;
 }
 
+interface LegalPage {
+	title: string;
+	slug: string;
+}
+
 interface StoreFooterProps {
 	storeName: string;
 	socialLinks?: SocialLink[];
+	legalPages?: LegalPage[];
 }
 
 function SocialIcon({
@@ -66,7 +73,11 @@ function SocialIcon({
 	return <Globe className={className} />;
 }
 
-export function StoreFooter({ storeName, socialLinks }: StoreFooterProps) {
+export function StoreFooter({
+	storeName,
+	socialLinks,
+	legalPages,
+}: StoreFooterProps) {
 	return (
 		<footer className="mt-auto border-t border-border/40 bg-muted/30">
 			<div className="container py-6">
@@ -87,6 +98,19 @@ export function StoreFooter({ storeName, socialLinks }: StoreFooterProps) {
 										className="size-[18px]"
 									/>
 								</a>
+							))}
+						</div>
+					)}
+					{legalPages && legalPages.length > 0 && (
+						<div className="flex items-center gap-4">
+							{legalPages.map((page) => (
+								<Link
+									key={page.slug}
+									href={`/legal/${page.slug}`}
+									className="text-xs text-muted-foreground/70 underline underline-offset-4 transition-colors hover:text-foreground"
+								>
+									{page.title}
+								</Link>
 							))}
 						</div>
 					)}

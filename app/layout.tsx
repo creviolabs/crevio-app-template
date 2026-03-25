@@ -1,7 +1,7 @@
 import { IframeNavigationHandler } from "@/components/iframe-navigation-handler";
 import { StoreFooter } from "@/components/store-footer";
 import { StoreHeader } from "@/components/store-header";
-import { getAccount } from "@/lib/data";
+import { getAccount, getLegalPages } from "@/lib/data";
 import "./app.css";
 
 export default async function RootLayout({
@@ -9,7 +9,14 @@ export default async function RootLayout({
 }: {
 	children: React.ReactNode;
 }) {
-	const account = await getAccount().catch(() => null);
+	const [account, legalPagesList] = await Promise.all([
+		getAccount().catch(() => null),
+		getLegalPages().catch(() => null),
+	]);
+	const legalPages = (legalPagesList?.data ?? []).map((p) => ({
+		title: p.title,
+		slug: p.slug,
+	}));
 
 	return (
 		<html lang="en">
@@ -28,6 +35,7 @@ export default async function RootLayout({
 					<StoreFooter
 						storeName={account?.name ?? "Store"}
 						socialLinks={account?.socialLinks ?? []}
+						legalPages={legalPages}
 					/>
 				</div>
 			</body>

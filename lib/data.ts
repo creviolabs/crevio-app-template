@@ -1,6 +1,20 @@
 import { cacheLife } from "next/cache";
 import { createCrevioClient } from "./crevio-client";
 
+export async function getLegalPages() {
+	"use cache";
+	cacheLife("hours");
+	const crevio = createCrevioClient();
+	return crevio.legalPages.list();
+}
+
+export async function getLegalPage(slug: string) {
+	"use cache";
+	cacheLife("hours");
+	const crevio = createCrevioClient();
+	return crevio.legalPages.get({ idOrSlug: slug });
+}
+
 export async function getAccount() {
 	"use cache";
 	cacheLife("hours");

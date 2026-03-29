@@ -1,74 +1,61 @@
-import { Menu, X } from "lucide-react";
-import { useState } from "react";
+import { LogIn, Store } from "lucide-react";
+import Image from "next/image";
+import Link from "next/link";
 
-import { Button } from "@/components/ui/button";
+interface HeaderProps {
+	name: string;
+	avatarUrl?: string | null;
+	hasBlog?: boolean;
+}
 
-const Header = () => {
-	const [mobileOpen, setMobileOpen] = useState(false);
-
+export function Header({
+	name,
+	avatarUrl,
+	hasBlog,
+}: HeaderProps) {
 	return (
-		<header className="fixed top-0 left-0 right-0 z-50 bg-background/80 backdrop-blur-md border-b border-border">
-			<div className="container flex items-center justify-between h-14">
-				<a href="/" className="font-semibold text-lg tracking-tight">
-					acme
-				</a>
-				<nav className="hidden md:flex items-center gap-8">
-					<a
-						href="#features"
-						className="text-sm text-muted-foreground hover:text-foreground transition-colors"
+		<header className="sticky top-0 z-50 border-b border-border/40 bg-background/80 backdrop-blur-lg">
+			<div className="container flex h-14 items-center justify-between">
+				<nav className="flex items-center gap-5">
+					<Link
+						href="/"
+						className="flex items-center gap-2 text-sm font-medium text-foreground transition-opacity hover:opacity-70"
 					>
-						Features
-					</a>
-					<a
-						href="#pricing"
-						className="text-sm text-muted-foreground hover:text-foreground transition-colors"
-					>
-						Pricing
-					</a>
-					<a
-						href="/docs"
-						className="text-sm text-muted-foreground hover:text-foreground transition-colors"
-					>
-						Docs
-					</a>
+						{avatarUrl ? (
+							<Image
+								src={avatarUrl}
+								alt={name}
+								width={24}
+								height={24}
+								priority
+								className="size-6 rounded-full object-cover"
+							/>
+						) : (
+							<Store className="size-4" />
+						)}
+						{name}
+					</Link>
+
+					{hasBlog && (
+						<Link
+							href="/blog"
+							className="text-sm text-muted-foreground transition-colors hover:text-foreground"
+						>
+							Blog
+						</Link>
+					)}
 				</nav>
-				<div className="hidden md:flex items-center gap-3">
-					<Button variant="ghost" size="sm">
-						Sign in
-					</Button>
-					<Button size="sm">Get Started</Button>
-				</div>
-				<button
-					type="button"
-					className="md:hidden"
-					onClick={() => setMobileOpen(!mobileOpen)}
+
+				<a
+					href="https://crevio.co/users/login"
+					target="_blank"
+					rel="noopener noreferrer"
+					className="flex items-center gap-1.5 text-xs text-muted-foreground transition-colors hover:text-foreground"
 				>
-					{mobileOpen ? <X size={20} /> : <Menu size={20} />}
-				</button>
+					<LogIn className="size-3.5" />
+					<span className="hidden sm:inline">Log in</span>
+				</a>
 			</div>
-			{mobileOpen && (
-				<div className="md:hidden border-t border-border p-4 flex flex-col gap-3 bg-background">
-					<a href="#features" className="text-sm text-muted-foreground py-1">
-						Features
-					</a>
-					<a href="#pricing" className="text-sm text-muted-foreground py-1">
-						Pricing
-					</a>
-					<a href="/docs" className="text-sm text-muted-foreground py-1">
-						Docs
-					</a>
-					<div className="flex gap-2 pt-2">
-						<Button variant="ghost" size="sm" className="flex-1">
-							Sign in
-						</Button>
-						<Button size="sm" className="flex-1">
-							Get Started
-						</Button>
-					</div>
-				</div>
-			)}
 		</header>
 	);
-};
-
-export default Header;
+}

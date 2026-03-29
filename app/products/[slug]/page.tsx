@@ -10,6 +10,7 @@ import { buttonVariants } from "@/components/ui/button";
 import { getAccount, getActiveProducts, getProduct } from "@/lib/data";
 import { formatInterval, formatPrice } from "@/lib/format-price";
 import { isImageMedia } from "@/lib/media";
+import { getAppUrl } from "@/lib/site-url";
 import { ProductImageGallery } from "./product-image-gallery";
 
 export async function generateMetadata({
@@ -106,6 +107,29 @@ function ProductJsonLd({
 	);
 }
 
+function BreadcrumbJsonLd({
+	items,
+}: { items: Array<{ name: string; url: string }> }) {
+	const jsonLd = {
+		"@context": "https://schema.org",
+		"@type": "BreadcrumbList",
+		itemListElement: items.map((item, i) => ({
+			"@type": "ListItem",
+			position: i + 1,
+			name: item.name,
+			item: item.url,
+		})),
+	};
+
+	return (
+		<script
+			type="application/ld+json"
+			// biome-ignore lint/security/noDangerouslySetInnerHtml: structured data
+			dangerouslySetInnerHTML={{ __html: JSON.stringify(jsonLd) }}
+		/>
+	);
+}
+
 export default async function ProductPage({
 	params,
 }: {
@@ -135,9 +159,20 @@ export default async function ProductPage({
 	);
 	const reviews = product.reviews ?? [];
 
+	const siteUrl = getAppUrl();
+
 	return (
 		<>
 			<ProductJsonLd product={product} />
+			<BreadcrumbJsonLd
+				items={[
+					{ name: "Home", url: siteUrl },
+					{
+						name: product.name,
+						url: `${siteUrl}/products/${product.slug}`,
+					},
+				]}
+			/>
 			<div className="container py-10">
 				<div className="max-w-5xl mx-auto">
 						<Link

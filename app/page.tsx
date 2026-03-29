@@ -56,6 +56,7 @@ export default async function Home({
 							alt={account.name}
 							width={64}
 							height={64}
+							priority
 							className="size-16 rounded-full object-cover"
 						/>
 					) : (

@@ -1,22 +1,44 @@
+import type { Metadata } from "next";
 import { IframeNavigationHandler } from "@/components/iframe-navigation-handler";
-import { StoreFooter } from "@/components/store-footer";
-import { StoreHeader } from "@/components/store-header";
-import { getAccount, getLegalPages } from "@/lib/data";
+import { Footer } from "@/components/footer";
+import { Header } from "@/components/header";
+import { getAccount, getBlogPosts, getLegalPages } from "@/lib/data";
+import { getAppUrl } from "@/lib/site-url";
 import "./app.css";
+
+export async function generateMetadata(): Promise<Metadata> {
+	const siteUrl = getAppUrl();
+	return {
+		metadataBase: new URL(siteUrl),
+	};
+}
 
 export default async function RootLayout({
 	children,
 }: {
 	children: React.ReactNode;
 }) {
-	const [account, legalPagesList] = await Promise.all([
+	const [account, legalPagesList, blogPostList] = await Promise.all([
 		getAccount().catch(() => null),
 		getLegalPages().catch(() => null),
+		getBlogPosts().catch(() => null),
 	]);
 	const legalPages = (legalPagesList?.data ?? []).map((p) => ({
 		title: p.title,
 		slug: p.slug,
 	}));
+
+	const organizationJsonLd = account
+		? {
+				"@context": "https://schema.org",
+				"@type": "Organization",
+				name: account.name,
+				url: getAppUrl(),
+				...(account.avatarUrl && { logo: account.avatarUrl }),
+				...(account.description && { description: account.description }),
+				...(account.supportEmail && { email: account.supportEmail }),
+			}
+		: null;
 
 	return (
 		<html lang="en">
@@ -25,15 +47,25 @@ export default async function RootLayout({
 				<meta name="viewport" content="width=device-width, initial-scale=1" />
 			</head>
 			<body>
+				{organizationJsonLd && (
+					<script
+						type="application/ld+json"
+						// biome-ignore lint/security/noDangerouslySetInnerHtml: structured data
+						dangerouslySetInnerHTML={{
+							__html: JSON.stringify(organizationJsonLd),
+						}}
+					/>
+				)}
 				<IframeNavigationHandler />
 				<div className="min-h-screen flex flex-col">
-					<StoreHeader
-						storeName={account?.name ?? "Store"}
+					<Header
+						name={account?.name ?? "Store"}
 						avatarUrl={account?.avatarUrl ?? null}
+						hasBlog={(blogPostList?.data?.length ?? 0) > 0}
 					/>
 					<main className="flex-1">{children}</main>
-					<StoreFooter
-						storeName={account?.name ?? "Store"}
+					<Footer
+						name={account?.name ?? "Store"}
 						socialLinks={account?.socialLinks ?? []}
 						legalPages={legalPages}
 					/>

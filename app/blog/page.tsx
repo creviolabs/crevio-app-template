@@ -6,9 +6,13 @@ import { getAccount, getBlogPosts } from "@/lib/data";
 export async function generateMetadata(): Promise<Metadata> {
 	try {
 		const account = await getAccount();
+		const title = `Blog — ${account.name}`;
+		const description = `Read the latest from ${account.name}`;
 		return {
-			title: `Blog — ${account.name}`,
-			description: `Read the latest from ${account.name}`,
+			title,
+			description,
+			openGraph: { title, description },
+			twitter: { card: "summary" },
 		};
 	} catch {
 		return { title: "Blog" };

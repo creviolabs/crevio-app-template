@@ -23,6 +23,7 @@ export function ProductImageGallery({
 						src={currentImage.url}
 						alt={productName}
 						fill
+						priority
 						className="object-cover"
 					/>
 				</div>

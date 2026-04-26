@@ -55,7 +55,7 @@ export default async function LegalPage({
 				</h1>
 				<time className="mt-3 block text-sm text-muted-foreground">
 					Last updated{" "}
-					{new Date(policy.updated_at).toLocaleDateString("en-US", {
+					{new Date(policy.updatedAt).toLocaleDateString("en-US", {
 						month: "long",
 						day: "numeric",
 						year: "numeric",

@@ -10,7 +10,7 @@
 		"dev": "vinext dev",
 		"start": "vinext start",
 		"postinstall": "bun run cf-typegen",
-		"typecheck": "bun run cf-typegen && tsc -b",
+		"typecheck": "bun run cf-typegen && tsgo -b",
 		"check": "biome check .",
 		"lint": "biome lint .",
 		"format": "biome format --write .",
@@ -57,7 +57,7 @@
 		"@vitejs/plugin-rsc": "latest",
     "react-server-dom-webpack": "^19.2.4",
 		"tailwindcss": "^4.2.1",
-		"typescript": "^5.9.3",
+    "@typescript/native-preview": "^7.0.0-dev.20260426.1",
 		"vite": "^8.0.0",
     "vinext": "^0.0.33",
 		"wrangler": "^4.73.0"

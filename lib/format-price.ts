@@ -11,10 +11,7 @@ export function formatPrice(
 	}).format(amountInCents / 100);
 }
 
-export function formatInterval(
-	interval: string | null,
-	count: number,
-): string {
+export function formatInterval(interval: string | null, count: number): string {
 	if (!interval) return "";
 	const label = count === 1 ? interval : `${count} ${interval}s`;
 	return `/ ${label}`;

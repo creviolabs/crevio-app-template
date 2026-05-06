@@ -17,7 +17,6 @@ export function ProductCard({ product }: { product: Product }) {
 
 	return (
 		<Link href={`/products/${product.slug}`} className="group flex flex-col">
-
 			<div className="relative aspect-4/3 overflow-hidden rounded-xl bg-muted mb-3.5">
 				{firstImage ? (
 					<Image
@@ -34,7 +33,6 @@ export function ProductCard({ product }: { product: Product }) {
 					</div>
 				)}
 			</div>
-
 
 			<div className="space-y-1">
 				<div className="flex items-start justify-between gap-3">

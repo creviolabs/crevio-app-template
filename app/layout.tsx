@@ -1,7 +1,7 @@
 import type { Metadata } from "next";
-import { IframeNavigationHandler } from "@/components/iframe-navigation-handler";
 import { Footer } from "@/components/footer";
 import { Header } from "@/components/header";
+import { IframeNavigationHandler } from "@/components/iframe-navigation-handler";
 import { getAccount, getBlogPosts, getLegalPages } from "@/lib/data";
 import { getAppUrl } from "@/lib/site-url";
 import "./app.css";

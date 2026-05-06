@@ -8,11 +8,7 @@ interface HeaderProps {
 	hasBlog?: boolean;
 }
 
-export function Header({
-	name,
-	avatarUrl,
-	hasBlog,
-}: HeaderProps) {
+export function Header({ name, avatarUrl, hasBlog }: HeaderProps) {
 	return (
 		<header className="sticky top-0 z-50 border-b border-border/40 bg-background/80 backdrop-blur-lg">
 			<div className="container flex h-14 items-center justify-between">

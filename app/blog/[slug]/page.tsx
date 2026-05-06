@@ -41,7 +41,10 @@ export async function generateMetadata({
 function BlogPostJsonLd({
 	post,
 	accountName,
-}: { post: BlogPostType; accountName: string }) {
+}: {
+	post: BlogPostType;
+	accountName: string;
+}) {
 	const siteUrl = getAppUrl();
 	const jsonLd = {
 		"@context": "https://schema.org",
@@ -66,7 +69,9 @@ function BlogPostJsonLd({
 
 function BreadcrumbJsonLd({
 	items,
-}: { items: Array<{ name: string; url: string }> }) {
+}: {
+	items: Array<{ name: string; url: string }>;
+}) {
 	const jsonLd = {
 		"@context": "https://schema.org",
 		"@type": "BreadcrumbList",
@@ -109,10 +114,7 @@ export default async function BlogPost({
 
 	return (
 		<>
-			<BlogPostJsonLd
-				post={post}
-				accountName={account?.name ?? ""}
-			/>
+			<BlogPostJsonLd post={post} accountName={account?.name ?? ""} />
 			<BreadcrumbJsonLd
 				items={[
 					{ name: "Home", url: siteUrl },
@@ -121,35 +123,35 @@ export default async function BlogPost({
 				]}
 			/>
 			<article className="container py-14 max-w-3xl mx-auto">
-			<Link
-				href="/blog"
-				className="group inline-flex items-center gap-1.5 text-sm text-muted-foreground transition-colors hover:text-foreground mb-5"
-			>
-				<ArrowLeft className="size-3.5 transition-transform group-hover:-translate-x-0.5" />
-				Blog
-			</Link>
+				<Link
+					href="/blog"
+					className="group inline-flex items-center gap-1.5 text-sm text-muted-foreground transition-colors hover:text-foreground mb-5"
+				>
+					<ArrowLeft className="size-3.5 transition-transform group-hover:-translate-x-0.5" />
+					Blog
+				</Link>
 
-			<header className="mb-10">
-				<h1 className="text-2xl font-semibold tracking-tight sm:text-3xl">
-					{post.title}
-				</h1>
-				{post.publishedAt && (
-					<time className="mt-3 block text-sm text-muted-foreground">
-						{new Date(post.publishedAt).toLocaleDateString("en-US", {
-							month: "long",
-							day: "numeric",
-							year: "numeric",
-						})}
-					</time>
-				)}
-			</header>
+				<header className="mb-10">
+					<h1 className="text-2xl font-semibold tracking-tight sm:text-3xl">
+						{post.title}
+					</h1>
+					{post.publishedAt && (
+						<time className="mt-3 block text-sm text-muted-foreground">
+							{new Date(post.publishedAt).toLocaleDateString("en-US", {
+								month: "long",
+								day: "numeric",
+								year: "numeric",
+							})}
+						</time>
+					)}
+				</header>
 
-			<div
-				className="prose prose-neutral max-w-none prose-headings:tracking-tight prose-a:text-foreground"
-				// biome-ignore lint/security/noDangerouslySetInnerHtml: trusted HTML from CMS
-				dangerouslySetInnerHTML={{ __html: post.content }}
-			/>
-		</article>
+				<div
+					className="prose prose-neutral max-w-none prose-headings:tracking-tight prose-a:text-foreground"
+					// biome-ignore lint/security/noDangerouslySetInnerHtml: trusted HTML from CMS
+					dangerouslySetInnerHTML={{ __html: post.content }}
+				/>
+			</article>
 		</>
 	);
 }

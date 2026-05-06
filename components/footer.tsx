@@ -73,11 +73,7 @@ function SocialIcon({
 	return <Globe className={className} />;
 }
 
-export function Footer({
-	name,
-	socialLinks,
-	legalPages,
-}: FooterProps) {
+export function Footer({ name, socialLinks, legalPages }: FooterProps) {
 	return (
 		<footer className="mt-auto border-t border-border/40 bg-muted/30">
 			<div className="container py-6">

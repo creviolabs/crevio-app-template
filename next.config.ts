@@ -12,9 +12,7 @@ const nextConfig: NextConfig = {
 	headers: async () => [
 		{
 			source: "/:path*",
-			headers: [
-				{ key: "Content-Security-Policy", value: "frame-ancestors *" },
-			],
+			headers: [{ key: "Content-Security-Policy", value: "frame-ancestors *" }],
 		},
 	],
 };

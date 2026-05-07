@@ -2,7 +2,7 @@ import { ChevronRight, Package } from "lucide-react";
 import type { Metadata } from "next";
 import Image from "next/image";
 import Link from "next/link";
-import { FooterCta } from "@/components/forms/footer-cta";
+import { CtaSection } from "@/components/forms/cta-section";
 import { ProductCard } from "@/components/product-card";
 import { getAccount, getActiveProducts } from "@/lib/data";
 
@@ -116,7 +116,9 @@ export default async function Home({
 					</>
 				)}
 			</div>
-			<FooterCta name={account?.name ?? "Store"} />
+			<CtaSection
+				description={`Subscribe to ${account?.name ?? "us"} for occasional updates straight to your inbox.`}
+			/>
 		</>
 	);
 }

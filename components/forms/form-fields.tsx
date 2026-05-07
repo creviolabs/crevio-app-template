@@ -1,6 +1,9 @@
 "use client";
 
-import type { Form, FormField } from "@crevio/sdk/models";
+import type {
+	Form as CrevioForm,
+	FormField as CrevioFormField,
+} from "@crevio/sdk/models";
 import { CheckCircle2, Loader2 } from "lucide-react";
 import { useActionState } from "react";
 import { useFormStatus } from "react-dom";
@@ -10,8 +13,8 @@ import { Label } from "@/components/ui/label";
 import { Textarea } from "@/components/ui/textarea";
 import { type SubmitFormState, submitForm } from "@/lib/actions/submit-form";
 
-interface DynamicFormFieldsProps {
-	form: Form;
+interface FormFieldsProps {
+	form: CrevioForm;
 	heading?: string;
 	description?: string;
 	submitLabel: string;
@@ -36,13 +39,13 @@ function SubmitButton({ label }: { label: string }) {
 	);
 }
 
-export function DynamicFormFields({
+export function FormFields({
 	form,
 	heading,
 	description,
 	submitLabel,
 	className,
-}: DynamicFormFieldsProps) {
+}: FormFieldsProps) {
 	const action = submitForm.bind(null, form.id);
 	const [state, formAction] = useActionState(action, initialState);
 	const previous = state.status === "error" ? state.values : undefined;
@@ -54,7 +57,9 @@ export function DynamicFormFields({
 					<div className="flex size-12 items-center justify-center rounded-full bg-emerald-500/10 text-emerald-600">
 						<CheckCircle2 className="size-6" />
 					</div>
-					<p className="max-w-md text-sm text-muted-foreground">{state.message}</p>
+					<p className="max-w-md text-sm text-muted-foreground">
+						{state.message}
+					</p>
 				</div>
 			</div>
 		);
@@ -75,7 +80,7 @@ export function DynamicFormFields({
 
 			<form action={formAction} className="grid gap-4">
 				{form.formFields.map((field) => (
-					<DynamicField key={field.id} field={field} previous={previous?.[field.id]} />
+					<Field key={field.id} field={field} previous={previous?.[field.id]} />
 				))}
 
 				{state.status === "error" && state.message && (
@@ -92,14 +97,14 @@ export function DynamicFormFields({
 	);
 }
 
-function DynamicField({
+function Field({
 	field,
 	previous,
 }: {
-	field: FormField;
+	field: CrevioFormField;
 	previous?: string | string[];
 }) {
-	const labelId = `dyn-${field.id}`;
+	const labelId = `field-${field.id}`;
 	const requiredMark = field.required ? (
 		<span className="text-destructive"> *</span>
 	) : null;

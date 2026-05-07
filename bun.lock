@@ -6,7 +6,7 @@
       "name": "crevio-app-template",
       "dependencies": {
         "@base-ui/react": "^1.4.1",
-        "@crevio/sdk": "^0.4.17",
+        "@crevio/sdk": "^0.4.22",
         "@crevio/vite-plugins": "^0.1.0",
         "@fontsource-variable/geist": "^5.2.8",
         "@tanstack/react-query": "^5.100.9",
@@ -149,7 +149,7 @@
 
     "@cloudflare/workerd-windows-64": ["@cloudflare/workerd-windows-64@1.20260504.1", "", { "os": "win32", "cpu": "x64" }, "sha512-QUg/B3dfrK/KHHHhiJzdkLkTg5mG7lA3t8iplbBoUa3XKCLOHOOXhbU4WSYlLqg8YnsQ6XLZ1HVA99fmZhJh7A=="],
 
-    "@crevio/sdk": ["@crevio/sdk@0.4.17", "", { "dependencies": { "zod": "^3.25.0 || ^4.0.0" } }, "sha512-0olAKE4LLAQWh0RkL+ao1WijXqoDIqw+xXe9cUAAaGuPTuHvT5LEzwjU+RdyTg3cINP8eyGEgGYjJBStBdTtQw=="],
+    "@crevio/sdk": ["@crevio/sdk@0.4.22", "", { "dependencies": { "zod": "^3.25.0 || ^4.0.0" } }, "sha512-JxF3zAc3zanjAvc15c8G2azfZi2pp+RLLpZJRiASeY09IwfzHS8VCUWEbmT7jNBG9JweIxxo94qLDcowm4EDxg=="],
 
     "@crevio/vite-plugins": ["@crevio/vite-plugins@0.1.0", "", { "dependencies": { "@babel/generator": "^7.27.0", "@babel/parser": "^7.27.0", "@babel/traverse": "^7.27.0", "@babel/types": "^7.27.0" }, "peerDependencies": { "vite": "^6.0.0 || ^7.0.0 || ^8.0.0" } }, "sha512-TGbz3slblRELP07+T/GY+zRQEXotvy/QmTCFgwEln2CCz+WLkCjrhOgVyVx8sy3qhK2d/YOd+J0XFUhP3AaImA=="],
 

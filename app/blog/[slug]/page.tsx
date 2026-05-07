@@ -3,6 +3,7 @@ import { ArrowLeft } from "lucide-react";
 import type { Metadata } from "next";
 import Link from "next/link";
 import { notFound } from "next/navigation";
+import { FooterCta } from "@/components/forms/footer-cta";
 import { getAccount, getBlogPost } from "@/lib/data";
 import { getAppUrl } from "@/lib/site-url";
 
@@ -152,6 +153,7 @@ export default async function BlogPost({
 					dangerouslySetInnerHTML={{ __html: post.content }}
 				/>
 			</article>
+			<FooterCta name={account?.name ?? "Store"} />
 		</>
 	);
 }

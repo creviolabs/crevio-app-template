@@ -31,3 +31,17 @@ For rewriting history non-interactively, use `GIT_SEQUENCE_EDITOR=:` and `GIT_ED
 - Shadcn/UI (in `components/ui/`) — biome lint disabled there, do not edit
 - TailwindCSS 4 with theme via CSS variables (oklch) in `app/app.css`
 - Data layer via `@crevio/sdk` in `lib/data.ts`
+
+## Forms
+
+Three components ship under `components/forms/`:
+
+- `newsletter-form.tsx` — flagship single-email inline signup, drop anywhere. Posts via `crevio.subscribers.create()` to the primary newsletter Form (auto-provisioned).
+- `contact-form.tsx` — flagship multi-field message form, page section. Posts via `crevio.formSubmissions.create()` to the primary contact Form (auto-provisioned).
+- `dynamic-form.tsx` — schema-driven generic renderer. Takes `formId` (or `purpose` to resolve a primary). Renders every field type, honors `confirmationRequired`. Use this for anything beyond newsletter and contact.
+
+### New kinds of forms (waitlists, surveys, RSVPs)
+
+Provision Forms via the `crevio_api` MCP (`POST /v1/forms`) — Forms are account-level config, not per-request data. Read the MCP's tool schema for the request shape, valid `purpose` values, and field types.
+
+Then **drop `<DynamicForm formId="form_xxx" />`** wherever it belongs. Only mirror `contact-form.tsx` when you need bespoke layout/copy/success state that the dynamic renderer can't express.

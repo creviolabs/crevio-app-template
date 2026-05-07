@@ -40,6 +40,13 @@ export function Header({ name, avatarUrl, hasBlog }: HeaderProps) {
 							Blog
 						</Link>
 					)}
+
+					<Link
+						href="/contact"
+						className="text-sm text-muted-foreground transition-colors hover:text-foreground"
+					>
+						Contact
+					</Link>
 				</nav>
 
 				<a

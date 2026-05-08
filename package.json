@@ -11,9 +11,7 @@
 		"start": "vinext start",
 		"postinstall": "bun run cf-typegen",
 		"typecheck": "bun run cf-typegen && tsgo -b",
-		"check": "biome check .",
-		"lint": "biome lint .",
-		"format": "biome format --write .",
+		"check": "biome check --write --unsafe .",
 		"test": "bun test"
 	},
 	"dependencies": {

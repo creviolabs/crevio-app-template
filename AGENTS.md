@@ -6,9 +6,9 @@ Guidance for AI agents working in this repo. Overrides any parent `AGENTS.md` (e
 
 ```bash
 bun run dev          # vinext dev server
-bun run build        # production build
 bun run typecheck    # wrangler types + tsgo -b
 bun run check        # biome check --write --unsafe . (auto-fixes lint + format)
+bun run build        # production build
 ```
 
 ## Git

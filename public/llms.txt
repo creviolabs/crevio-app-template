@@ -1,0 +1,5 @@
+# Starter App
+> A starter web app built with Crevio, ready to be customized into your own product.
+
+## Pages
+- [Home](/): Landing page introducing the app.

@@ -28,10 +28,6 @@ export default defineConfig(({ mode }) => ({
 					: mode === "production",
 			NODE_ENV: mode,
 			DEBUG_LOGS: mode === "development" ? "true" : "false",
-			ANALYTICS_SCRIPT_ATTRS: JSON.stringify({
-				src: "https://static.crevio.co/analytics.js",
-				"data-domain": process.env.CREVIO_APP_URL,
-			}),
 		}),
 	],
 }));

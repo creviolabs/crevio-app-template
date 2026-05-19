@@ -220,7 +220,7 @@ export default async function ProductPage({
 
 								{product.bodyHtml ? (
 									<div
-										className="prose prose-sm max-w-none text-muted-foreground prose-headings:text-foreground prose-strong:text-foreground prose-a:text-foreground"
+										className="prose prose-sm max-w-none"
 										// biome-ignore lint/security/noDangerouslySetInnerHtml: trusted HTML from CMS
 										dangerouslySetInnerHTML={{
 											__html: product.bodyHtml,

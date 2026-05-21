@@ -55,9 +55,11 @@ bun run dev
 
 This project is built with:
 
-- [React Router v7](https://reactrouter.com/) — routing and server-side rendering
+- [Next.js 16](https://nextjs.org/) (via [vinext](https://www.npmjs.com/package/vinext)) — App Router, RSC, and SSR on Vite
+- [React 19](https://react.dev/) — UI components
 - [@crevio/sdk](https://www.npmjs.com/package/@crevio/sdk) — data fetching from your Crevio account
-- [TailwindCSS 4](https://tailwindcss.com/) — styling and theming
+- [Shadcn/UI](https://ui.shadcn.com/) — accessible component primitives
+- [TailwindCSS 4](https://tailwindcss.com/) — styling and theming via CSS variables (oklch)
 - [Cloudflare Workers](https://workers.cloudflare.com/) — edge deployment
 - TypeScript — type safety throughout
 
@@ -85,8 +87,10 @@ Read more here: [Cloudflare Custom Domains](https://developers.cloudflare.com/wo
 
 | Command | Description |
 |---------|-------------|
-| `bun run dev` | Start development server |
+| `bun run dev` | Start development server (vinext) |
 | `bun run build` | Production build |
+| `bun run start` | Run the production build locally |
 | `bun run deploy` | Build and deploy to Cloudflare Workers |
-| `bun run typecheck` | Run type checking |
-| `bun run check` | Run Biome checks |
+| `bun run typecheck` | Generate Cloudflare types and run TypeScript checks |
+| `bun run check` | Run Biome (lint + format, auto-fix) |
+| `bun run test` | Run the test suite |

@@ -168,6 +168,9 @@
     -webkit-font-smoothing: antialiased;
     -moz-osx-font-smoothing: grayscale;
   }
+}
+
+@layer utilities {
   .prose {
     --tw-prose-body: var(--color-muted-foreground);
     --tw-prose-headings: var(--color-foreground);

@@ -7,7 +7,7 @@
       "dependencies": {
         "@base-ui/react": "^1.4.1",
         "@crevio/sdk": "^0.4.22",
-        "@crevio/vite-plugins": "^0.1.1",
+        "@crevio/vite-plugins": "^0.1.2",
         "@fontsource-variable/geist": "^5.2.9",
         "@tanstack/react-query": "^5.100.10",
         "class-variance-authority": "^0.7.1",
@@ -151,7 +151,7 @@
 
     "@crevio/sdk": ["@crevio/sdk@0.4.22", "", { "dependencies": { "zod": "^3.25.0 || ^4.0.0" } }, "sha512-JxF3zAc3zanjAvc15c8G2azfZi2pp+RLLpZJRiASeY09IwfzHS8VCUWEbmT7jNBG9JweIxxo94qLDcowm4EDxg=="],
 
-    "@crevio/vite-plugins": ["@crevio/vite-plugins@0.1.1", "", { "dependencies": { "@babel/generator": "^7.27.0", "@babel/parser": "^7.27.0", "@babel/traverse": "^7.27.0", "@babel/types": "^7.27.0" }, "peerDependencies": { "vite": "^6.0.0 || ^7.0.0 || ^8.0.0" } }, "sha512-HrUdTzh3zGSD+92x27Njtw4o4VFtCryXyXqqH23nft/d7tID1QeMUbDO7LftObhma78Zaw1zxcrav29hAPzC+w=="],
+    "@crevio/vite-plugins": ["@crevio/vite-plugins@0.1.2", "", { "dependencies": { "@babel/generator": "^7.27.0", "@babel/parser": "^7.27.0", "@babel/traverse": "^7.27.0", "@babel/types": "^7.27.0" }, "peerDependencies": { "vite": "^6.0.0 || ^7.0.0 || ^8.0.0" } }, "sha512-YEDlp+Yuy17NCDGThZLnUvckwRHcaXlvrc2wKYAkZY/IIGViqNqDw/s+QxiHYWA0ReORiDeGqPfLrnTbcCUJyA=="],
 
     "@cspotcode/source-map-support": ["@cspotcode/source-map-support@0.8.1", "", { "dependencies": { "@jridgewell/trace-mapping": "0.3.9" } }, "sha512-IchNf6dN4tHoMFIn/7OE8LWZ19Y6q/67Bmf6vnGREv8RSbBVb9LPJxEcnwrcwX6ixSvaiGoomAUvu4YSxXrVgw=="],
 

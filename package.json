@@ -16,7 +16,7 @@
 	},
 	"dependencies": {
 		"@base-ui/react": "^1.5.0",
-		"@crevio/sdk": "^0.4.22",
+		"@crevio/sdk": "^0.5.1",
 		"@crevio/vite-plugins": "^0.1.2",
 		"@fontsource-variable/geist": "^5.2.9",
 		"@tanstack/react-query": "^5.101.0",

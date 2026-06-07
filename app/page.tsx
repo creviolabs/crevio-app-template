@@ -11,9 +11,22 @@ const PAGE_SIZE = 9;
 export async function generateMetadata(): Promise<Metadata> {
 	try {
 		const account = await getAccount();
+		const description =
+			account.description || `Lear more about ${account.name}`;
+		// No `images` — that would suppress the site-wide opengraph-image.tsx card.
 		return {
 			title: account.name,
-			description: account.description || `Shop products from ${account.name}`,
+			description,
+			openGraph: {
+				title: account.name,
+				description,
+				type: "website",
+			},
+			twitter: {
+				card: "summary_large_image",
+				title: account.name,
+				description,
+			},
 		};
 	} catch {
 		return { title: "Store" };

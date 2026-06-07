@@ -10,6 +10,9 @@ export async function generateMetadata(): Promise<Metadata> {
 	const siteUrl = getAppUrl();
 	return {
 		metadataBase: new URL(siteUrl),
+		// Render the site-wide opengraph-image as a full-width card on X.
+		// Per-route pages can override this (e.g. a text-only post → "summary").
+		twitter: { card: "summary_large_image" },
 	};
 }
 

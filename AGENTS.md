@@ -30,6 +30,18 @@ For rewriting history non-interactively, use `GIT_SEQUENCE_EDITOR=:` and `GIT_ED
 - TailwindCSS 4 with theme via CSS variables (oklch) in `app/app.css`
 - Data layer via `@crevio/sdk` in `lib/data.ts`
 
+## Crevio API & SDK
+
+Data is fetched through `@crevio/sdk` (data layer in `lib/data.ts`, client in `lib/crevio-client.ts`).
+
+For the full, always-current reference — SDK install and usage, MCP access, every REST resource, auth, conventions, and error shapes — fetch the canonical agent skill manifest:
+
+```
+https://api.crevio.co/skill.md
+```
+
+This is the single source of truth for working with the Crevio API. Read it before building or changing data-fetching code rather than guessing at resource names or response shapes.
+
 ## Forms
 
 Use `<CrevioForm formId="..." />` (from `components/forms/crevio-form.tsx`) to render any Form anywhere — pass the `id` returned when you provisioned the Form.

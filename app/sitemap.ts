@@ -7,9 +7,9 @@ import { discoverStaticRoutes } from "@/lib/sitemap-routes";
 // Sitemap configuration — edit these to control what appears in /sitemap.xml.
 // ---------------------------------------------------------------------------
 
-// Static routes auto-discovered from `app/`. Override priority here or
-// add a path to `EXCLUDED_STATIC_ROUTES` to hide it.
-const EXCLUDED_STATIC_ROUTES = new Set<string>(["/forms-demo"]);
+// Static routes auto-discovered from `app/` (see `lib/sitemap-routes.ts`).
+// Override priority below, or add a discovered path here to hide it.
+const EXCLUDED_STATIC_ROUTES = new Set<string>();
 const STATIC_PRIORITY: Record<string, number> = { "/": 1, "/blog": 0.8 };
 const DEFAULT_STATIC_PRIORITY = 0.5;
 const STATIC_CHANGE_FREQUENCY: MetadataRoute.Sitemap[number]["changeFrequency"] =

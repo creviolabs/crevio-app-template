@@ -11,14 +11,12 @@ export type SubmitFormState = {
 /**
  * Generic Form submission action.
  *
- * Reads top-level `email` and `name` from the FormData — the API auto-fills
- * these into the matching email and first text field respectively. Any other
- * inputs whose `name` is a numeric field id are passed through verbatim in
+ * Every input is named by its numeric field id (see `form-fields.tsx`), so we
+ * resolve the email and name fields from the form schema rather than expecting
+ * literal `email`/`name` keys. The email value is taken from the `email`-type
+ * field and the name from the first `text` field; the API auto-fills these
+ * into the matching fields. All other numeric field ids are passed through in
  * the `answers` map.
- *
- * Use this for every form component; bake the field ids into the input
- * `name` attributes when you generate the JSX (the agent gets them from the
- * `crevio.forms.create()` response).
  */
 export async function submitForm(
 	formId: string,
@@ -31,26 +29,38 @@ export async function submitForm(
 		values[key] = all.length > 1 ? all : (all[0] ?? "");
 	}
 
-	const email = String(formData.get("email") ?? "").trim();
-	if (!email) {
-		return { status: "error", message: "A valid email is required.", values };
-	}
-
-	const answers: Record<string, string | string[]> = {};
-	for (const key of new Set(formData.keys())) {
-		if (!/^\d+$/.test(key)) continue;
-		const all = formData.getAll(key).map(String).filter(Boolean);
-		if (all.length > 0) answers[key] = all.length > 1 ? all : all[0];
-	}
-
 	try {
 		const crevio = createCrevioClient();
 		const form = await crevio.forms.get({ id: formId });
 
+		const emailField = form.formFields.find((f) => f.fieldType === "email");
+		const nameField = form.formFields.find((f) => f.fieldType === "text");
+
+		const email = emailField
+			? String(formData.get(emailField.id) ?? "").trim()
+			: "";
+		if (!email) {
+			return { status: "error", message: "A valid email is required.", values };
+		}
+
+		const name = nameField
+			? formData.get(nameField.id)?.toString() || undefined
+			: undefined;
+
+		const skipIds = new Set(
+			[emailField?.id, nameField?.id].filter(Boolean) as string[],
+		);
+		const answers: Record<string, string | string[]> = {};
+		for (const key of new Set(formData.keys())) {
+			if (!/^\d+$/.test(key) || skipIds.has(key)) continue;
+			const all = formData.getAll(key).map(String).filter(Boolean);
+			if (all.length > 0) answers[key] = all.length > 1 ? all : all[0];
+		}
+
 		await crevio.formSubmissions.create({
 			formId,
 			email,
-			name: formData.get("name")?.toString() || undefined,
+			name,
 			answers,
 		});
 

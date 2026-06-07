@@ -28,6 +28,23 @@ const COLORS = {
 export const size = { width: 1200, height: 630 };
 export const contentType = "image/png";
 
+// Strip anything the bundled Satori font can't render. For an uncovered glyph
+// (emoji, stars, arrows, non-Latin scripts) Satori fetches a fallback font at
+// render time — that fetch 400s in the Cloudflare Workers runtime and 500s the
+// whole card. Store name/description are user-controlled, so sanitize them.
+// Keep Latin + Latin-1 + Latin Extended; map common typographic glyphs to ASCII.
+function ogSafe(text: string): string {
+	return text
+		.replace(/[‘’‚‛]/g, "'")
+		.replace(/[“”„‟]/g, '"')
+		.replace(/[–—―]/g, "-")
+		.replace(/…/g, "...")
+		.replace(/[→➡]/g, "->")
+		.replace(/[^ -ɏ\s]/g, "")
+		.replace(/\s+/g, " ")
+		.trim();
+}
+
 // Falls back to og:image for platforms without their own card. Override per
 // route by exporting `alt` from a deeper opengraph-image file.
 export const alt = "Social sharing image";
@@ -36,11 +53,11 @@ export default async function Image() {
 	// Reuse the same cached loader the pages use — no extra API round-trips.
 	const account = await getAccount().catch(() => null);
 
-	const name = account?.name ?? "Crevio";
+	const name = ogSafe(account?.name ?? "") || "Crevio";
 	// TEMPLATE: swap `description` for a fixed tagline if you want the same line
 	// on every share (e.g. "The easiest way to sell what you make").
-	const tagline = account?.description ?? "";
-	const host = getAppUrl().replace(/^https?:\/\//, "");
+	const tagline = ogSafe(account?.description ?? "");
+	const host = ogSafe(getAppUrl().replace(/^https?:\/\//, ""));
 
 	return new ImageResponse(
 		<div

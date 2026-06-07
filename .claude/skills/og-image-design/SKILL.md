@@ -156,6 +156,7 @@ export default async function Image({
 > **Satori gotchas:**
 > - Only **flexbox** and a CSS subset — no `display: grid`, no `gap` on some versions (use margins), no float.
 > - Every element with children that wraps multiple nodes needs an explicit `display: flex` (Satori requires it).
+> - **No glyph outside the loaded font's coverage** (emoji, ★, →, non-Latin scripts). Satori fetches a fallback font at render time — on Cloudflare Workers (`vinext`) that fetch 400s and the card 500s. Fix: use words/numbers (`4.9/5`, not `★ 4.9`) or inline `<svg>` shapes, sanitize store-supplied text (see `ogSafe()` in [`app/opengraph-image.tsx`](../../../app/opengraph-image.tsx)), or load a font covering the glyphs via the `fonts` option.
 > - No external `next/font` magic — load custom fonts by fetching the `.woff`/`.ttf` as an `ArrayBuffer` and passing it via the `fonts` option (see below). Without that you get `system-ui`, which renders fine but plainly.
 > - Keep it self-contained: this file runs in an isolated rendering context, not your React tree.
 
@@ -287,6 +288,7 @@ Generated images render at `/<route>/opengraph-image` in dev — open that URL d
 | Missing `metadataBase` | Image URLs stay relative, platforms can't fetch | Already set in `app/layout.tsx` — keep it |
 | `display: grid` in `ImageResponse` | Satori silently misrenders | Flexbox only |
 | Missing `display: flex` on a multi-child node | Satori throws at render time | Add `display: flex` explicitly |
+| Emoji / ★ / arrows / non-Latin glyphs in text | Satori fetches a fallback font → **400s on Cloudflare Workers → card 500s** | Use words/numbers or inline SVG shapes; sanitize store-supplied text (`ogSafe()`); or load a font covering the glyphs |
 | `twitter: { card: "summary" }` with a large image | Tiny thumbnail instead of full card | Use `summary_large_image` or omit and rely on the file convention |
 | Text too small | Unreadable on mobile previews | Title minimum 48px at 1200px width |
 | Light background | Gets lost in white/light feeds | Use dark or saturated backgrounds |

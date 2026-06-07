@@ -3,5 +3,6 @@ export function getAppUrl(): string {
 	if (!url) {
 		throw new Error("CREVIO_APP_URL is not set");
 	}
-	return url;
+	// Strip trailing slash — callers append paths, avoiding `//` in URLs.
+	return url.replace(/\/+$/, "");
 }

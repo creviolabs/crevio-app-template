@@ -30,22 +30,6 @@ For rewriting history non-interactively, use `GIT_SEQUENCE_EDITOR=:` and `GIT_ED
 - TailwindCSS 4 with theme via CSS variables (oklch) in `app/app.css`
 - Data layer via `@crevio/sdk` in `lib/data.ts`
 
-## Crevio API & SDK
+## Crevio API, SDK & Forms
 
-Data is fetched through `@crevio/sdk` (data layer in `lib/data.ts`, client in `lib/crevio-client.ts`).
-
-For the full, always-current reference — SDK install and usage, MCP access, every REST resource, auth, conventions, and error shapes — fetch the canonical agent skill manifest:
-
-```
-https://api.crevio.co/skill.md
-```
-
-This is the single source of truth for working with the Crevio API. Read it before building or changing data-fetching code rather than guessing at resource names or response shapes.
-
-## Forms
-
-Use `<CrevioForm formId="..." />` (from `components/forms/crevio-form.tsx`) to render any Form anywhere — pass the `id` returned when you provisioned the Form.
-
-All Form lifecycle work — create, update, archive, restore, delete, and checking that an id still resolves on rebuild — goes through the `crevio_api` MCP. Read its tool descriptions for request/response shapes. The SDK in `lib/crevio-client.ts` is for runtime rendering only; don't reach for it when managing Forms.
-
-The page source is the source of truth for which Form belongs to a page — no registry, no env var.
+See the `crevio-api` skill — it fetches the canonical hosted manifest at `https://api.crevio.co/skill.md`, the single source of truth for the Crevio API, SDK, and Forms.

@@ -3,10 +3,16 @@ import { Star } from "lucide-react";
 import Image from "next/image";
 import Link from "next/link";
 import { formatInterval, formatPrice } from "@/lib/format-price";
-import { isImageMedia } from "@/lib/media";
+import {
+	embedUrl,
+	isDisplayableMedia,
+	isExternalVideo,
+	isVideoMedia,
+} from "@/lib/media";
 
 export function ProductCard({ product }: { product: Product }) {
-	const firstImage = product.mediaGallery?.find(isImageMedia);
+	// First image, or fall back to a video so a video-only product isn't blank.
+	const cover = product.mediaGallery?.find(isDisplayableMedia);
 	const lowestVariant = product.priceVariants
 		.filter((v) => v.amountType !== "custom")
 		.sort((a, b) => (a.amount ?? 0) - (b.amount ?? 0))[0];
@@ -18,19 +24,38 @@ export function ProductCard({ product }: { product: Product }) {
 	return (
 		<Link href={`/products/${product.slug}`} className="group flex flex-col">
 			<div className="relative aspect-4/3 overflow-hidden rounded-xl bg-muted mb-3.5">
-				{firstImage ? (
-					<Image
-						src={firstImage.url}
-						alt={product.name}
-						fill
-						className="object-cover transition-transform duration-500 will-change-transform group-hover:scale-[1.03]"
-					/>
-				) : (
+				{!cover ? (
 					<div className="size-full flex items-center justify-center">
 						<span className="text-4xl font-extralight text-muted-foreground/25 select-none">
 							{product.name.charAt(0)}
 						</span>
 					</div>
+				) : isExternalVideo(cover) ? (
+					<iframe
+						src={embedUrl(cover) ?? undefined}
+						title={product.name}
+						allow="encrypted-media; picture-in-picture"
+						className="size-full pointer-events-none"
+					/>
+				) : isVideoMedia(cover) ? (
+					<video
+						src={cover.url}
+						muted
+						playsInline
+						preload="metadata"
+						className="size-full object-cover"
+					>
+						<track kind="captions" />
+					</video>
+				) : (
+					<Image
+						src={cover.url}
+						alt={product.name}
+						width={800}
+						height={600}
+						sizes="(min-width: 1024px) 33vw, (min-width: 640px) 50vw, 100vw"
+						className="size-full object-cover transition-transform duration-500 will-change-transform group-hover:scale-[1.03]"
+					/>
 				)}
 			</div>
 

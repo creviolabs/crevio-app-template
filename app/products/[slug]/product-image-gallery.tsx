@@ -2,54 +2,93 @@
 
 import Image from "next/image";
 import { useState } from "react";
+import { embedUrl, isExternalVideo, isVideoMedia } from "@/lib/media";
 
-interface ProductImageGalleryProps {
-	images: Array<{ url: string; type: string }>;
-	productName: string;
+type Media = { url: string; type: string };
+
+// One media item. Videos MUST use <video> — a video blob in <Image> renders blank.
+function Frame({
+	item,
+	alt,
+	hero,
+}: {
+	item: Media;
+	alt: string;
+	hero?: boolean;
+}) {
+	if (isExternalVideo(item)) {
+		const src = embedUrl(item);
+		if (!src) return null;
+		return (
+			<iframe
+				src={src}
+				title={alt || "Video"}
+				allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture"
+				allowFullScreen
+				className={`size-full ${hero ? "" : "pointer-events-none"}`}
+			/>
+		);
+	}
+	if (isVideoMedia(item)) {
+		return (
+			<video
+				key={item.url}
+				src={item.url}
+				controls={hero}
+				muted={!hero}
+				playsInline
+				preload="metadata"
+				className={`size-full ${hero ? "object-contain bg-black" : "object-cover"}`}
+			>
+				<track kind="captions" />
+			</video>
+		);
+	}
+	return (
+		<Image
+			src={item.url}
+			alt={alt}
+			width={hero ? 1200 : 64}
+			height={hero ? 900 : 64}
+			priority={hero}
+			sizes={hero ? "(min-width: 1024px) 50vw, 100vw" : "64px"}
+			className="size-full object-cover"
+		/>
+	);
 }
 
 export function ProductImageGallery({
-	images,
+	media,
 	productName,
-}: ProductImageGalleryProps) {
-	const [selectedImage, setSelectedImage] = useState(0);
-	const currentImage = images[selectedImage];
+}: {
+	media: Media[];
+	productName: string;
+}) {
+	const [selected, setSelected] = useState(0);
+	const current = media[selected];
 
 	return (
 		<>
-			{currentImage ? (
-				<div className="relative aspect-4/3 overflow-hidden rounded-xl bg-muted">
-					<Image
-						src={currentImage.url}
-						alt={productName}
-						fill
-						priority
-						className="object-cover"
-					/>
-				</div>
-			) : (
-				<div className="aspect-4/3 rounded-xl bg-muted flex items-center justify-center">
-					<span className="text-6xl font-extralight text-muted-foreground/15 select-none">
+			<div className="relative aspect-4/3 overflow-hidden rounded-xl bg-muted">
+				{current ? (
+					<Frame item={current} alt={productName} hero />
+				) : (
+					<span className="absolute inset-0 flex items-center justify-center text-6xl font-extralight text-muted-foreground/15 select-none">
 						{productName.charAt(0)}
 					</span>
-				</div>
-			)}
+				)}
+			</div>
 
-			{/* Thumbnail strip */}
-			{images.length > 1 && (
+			{media.length > 1 && (
 				<div className="flex gap-2 overflow-x-auto pb-1">
-					{images.map((img, idx) => (
+					{media.map((item, idx) => (
 						<button
-							key={img.url}
+							key={item.url}
 							type="button"
-							onClick={() => setSelectedImage(idx)}
-							className={`relative shrink-0 size-16 rounded-lg overflow-hidden bg-muted transition-opacity ${
-								idx === selectedImage
-									? "ring-2 ring-foreground/20"
-									: "opacity-60 hover:opacity-100"
-							}`}
+							onClick={() => setSelected(idx)}
+							className={`shrink-0 size-16 overflow-hidden rounded-lg bg-muted transition-opacity ${idx === selected ? "ring-2 ring-foreground/20" : "opacity-60 hover:opacity-100"}`}
 						>
-							<Image src={img.url} alt="" fill className="object-cover" />
+							<Frame item={item} alt="" />
 						</button>
 					))}
 				</div>

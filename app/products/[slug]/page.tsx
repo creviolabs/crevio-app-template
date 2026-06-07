@@ -9,7 +9,7 @@ import { Badge } from "@/components/ui/badge";
 import { buttonVariants } from "@/components/ui/button";
 import { getAccount, getActiveProducts, getProduct } from "@/lib/data";
 import { formatInterval, formatPrice } from "@/lib/format-price";
-import { isImageMedia } from "@/lib/media";
+import { isDisplayableMedia, isImageMedia } from "@/lib/media";
 import { getAppUrl } from "@/lib/site-url";
 import { ProductImageGallery } from "./product-image-gallery";
 
@@ -148,7 +148,7 @@ export default async function ProductPage({
 		notFound();
 	}
 
-	const images = product.mediaGallery.filter(isImageMedia);
+	const galleryMedia = product.mediaGallery.filter(isDisplayableMedia);
 
 	const visibleVariants = product.priceVariants.filter(
 		(v: PriceVariant) => !v.hidden && !v.archived,
@@ -182,7 +182,10 @@ export default async function ProductPage({
 					<div className="grid grid-cols-1 md:grid-cols-5 gap-12">
 						{/* Images — 3/5 */}
 						<div className="md:col-span-3 space-y-3">
-							<ProductImageGallery images={images} productName={product.name} />
+							<ProductImageGallery
+								media={galleryMedia}
+								productName={product.name}
+							/>
 						</div>
 
 						{/* Info — 2/5, sticky */}

@@ -33,3 +33,12 @@ For rewriting history non-interactively, use `GIT_SEQUENCE_EDITOR=:` and `GIT_ED
 ## Crevio API, SDK & Forms
 
 See the `crevio-api` skill — it fetches the canonical hosted manifest at `https://api.crevio.co/skill.md`, the single source of truth for the Crevio API, SDK, and Forms.
+
+## Skills
+
+Skills live in `.claude/skills/` — load the relevant `SKILL.md` before working in its area.
+
+- `crevio-api` — Crevio API/SDK, `lib/data.ts`, `<CrevioForm>`
+- `frontend-design` — building UI components and pages
+- `vercel-react-best-practices` — React 19 + Next.js performance
+- `cloudflare` / `wrangler` / `workers-best-practices` — Workers, D1/KV/R2, deploys

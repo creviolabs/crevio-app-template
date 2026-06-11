@@ -1,9 +1,11 @@
 import { CrevioForm } from "@/components/forms/crevio-form";
 
 /**
- * Set this to the id returned when you provisioned the Form via the
- * `crevio_api` MCP. CrevioForm renders a friendly fallback if the id is
- * empty or doesn't resolve.
+ * Set this to the prefix_id ("form_...") returned when you provision the
+ * Form via the `crevio_api` MCP (POST /v1/forms — define the fields you
+ * want there). The build FAILS if this is left empty while CtaSection is
+ * still rendered (see scripts/check-form-ids.ts); if you don't want a form,
+ * remove the CtaSection usage instead.
  */
 const FORM_ID: string = "";
 

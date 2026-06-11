@@ -34,6 +34,8 @@ For rewriting history non-interactively, use `GIT_SEQUENCE_EDITOR=:` and `GIT_ED
 
 See the `crevio-api` skill — it fetches the canonical hosted manifest at `https://api.crevio.co/skill.md`, the single source of truth for the Crevio API, SDK, and Forms.
 
+Every `<CrevioForm>` must be bound to a real Form: create it first (`POST /v1/forms` via the `crevio_api` MCP), then use the returned prefix_id (`form_...`) as `formId`. The build fails on an empty or non-`form_` static `formId` (`scripts/check-form-ids.ts`) — bind a real Form or remove the usage.
+
 ## Skills
 
 Skills live in `.claude/skills/` — load the relevant `SKILL.md` before working in its area.

@@ -4,7 +4,8 @@
 	"version": "0.0.0",
 	"type": "module",
 	"scripts": {
-		"build": "vinext build",
+		"build": "bun run check:forms && vinext build",
+		"check:forms": "bun scripts/check-form-ids.ts",
 		"cf-typegen": "wrangler types",
 		"deploy": "vinext deploy",
 		"dev": "vinext dev",

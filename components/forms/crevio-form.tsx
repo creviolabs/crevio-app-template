@@ -12,10 +12,15 @@ interface CrevioFormProps {
 /**
  * CrevioForm
  *
- * Schema-driven form renderer. Pass an `id` from `crevio.forms.create()`
- * (the `crevio_api` MCP) and the component fetches the Form, renders its
- * fields, and posts submissions through `lib/actions/submit-form.ts`.
- * Honors `confirmationRequired` for the success message.
+ * Schema-driven form renderer. Pass the prefix_id ("form_...") from
+ * `crevio.forms.create()` (the `crevio_api` MCP) and the component fetches
+ * the Form, renders its fields, and posts submissions through
+ * `lib/actions/submit-form.ts`. Honors `confirmationRequired` for the
+ * success message.
+ *
+ * formId is validated at build time (scripts/check-form-ids.ts): an empty
+ * or non-"form_..." literal fails the build rather than shipping the
+ * fallback below to production.
  */
 export async function CrevioForm({
 	formId,

@@ -1,5 +1,5 @@
 import type { MetadataRoute } from "next";
-import { getActiveProducts, getBlogPosts, getLegalPages } from "@/lib/data";
+import { getBlogPosts, getLegalPages } from "@/lib/data";
 import { getAppUrl } from "@/lib/site-url";
 import { discoverStaticRoutes } from "@/lib/sitemap-routes";
 
@@ -26,12 +26,6 @@ type DynamicSource = {
 };
 
 const DYNAMIC_SOURCES: DynamicSource[] = [
-	{
-		basePath: "/products",
-		fetch: getActiveProducts,
-		priority: 0.9,
-		changeFrequency: "weekly",
-	},
 	{
 		basePath: "/blog",
 		fetch: getBlogPosts,

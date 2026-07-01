@@ -6,7 +6,7 @@
       "name": "crevio-app-template",
       "dependencies": {
         "@base-ui/react": "^1.6.0",
-        "@crevio/sdk": "0.6.0",
+        "@crevio/sdk": "^0.6.5",
         "@crevio/vite-plugins": "^0.1.2",
         "@fontsource-variable/geist": "^5.2.9",
         "@tanstack/react-query": "^5.101.2",
@@ -153,7 +153,7 @@
 
     "@cloudflare/workerd-windows-64": ["@cloudflare/workerd-windows-64@1.20260625.1", "", { "os": "win32", "cpu": "x64" }, "sha512-LH6iIX1HHaTwVKV5VokDxxUErXJzQoNZFRwVm7Vx/3fB/ApcTcRCUaMqcxI4as94jEUqg+pmX5czOndiveohow=="],
 
-    "@crevio/sdk": ["@crevio/sdk@0.6.0", "", { "dependencies": { "zod": "^3.25.0 || ^4.0.0" } }, "sha512-dCkwsaJcvCOg4i5fKUcDDvF1Hn3BWBewNIBrgELBieBs+aXekCn/l1GfOnod0sJ7R2MmmGwuHl2h+DTDSmkLdQ=="],
+    "@crevio/sdk": ["@crevio/sdk@0.6.5", "", { "dependencies": { "jose": "^5.9.0", "zod": "^3.25.0 || ^4.0.0" } }, "sha512-ncmCRX3byJoUOwy0ECQ75vbno6olaKmByfCcKk3SSDF2XVDRYxSd4Msr5R0BXc8crfQHt0jTHV6MwfjHjKibdQ=="],
 
     "@crevio/vite-plugins": ["@crevio/vite-plugins@0.1.2", "", { "dependencies": { "@babel/generator": "^7.27.0", "@babel/parser": "^7.27.0", "@babel/traverse": "^7.27.0", "@babel/types": "^7.27.0" }, "peerDependencies": { "vite": "^6.0.0 || ^7.0.0 || ^8.0.0" } }, "sha512-YEDlp+Yuy17NCDGThZLnUvckwRHcaXlvrc2wKYAkZY/IIGViqNqDw/s+QxiHYWA0ReORiDeGqPfLrnTbcCUJyA=="],
 
@@ -1073,7 +1073,7 @@
 
     "jiti": ["jiti@2.7.0", "", { "bin": { "jiti": "lib/jiti-cli.mjs" } }, "sha512-AC/7JofJvZGrrneWNaEnJeOLUx+JlGt7tNa0wZiRPT4MY1wmfKjt2+6O2p2uz2+skll8OZZmJMNqeke7kKbNgQ=="],
 
-    "jose": ["jose@6.2.2", "", {}, "sha512-d7kPDd34KO/YnzaDOlikGpOurfF0ByC2sEV4cANCtdqLlTfBlw2p14O/5d/zv40gJPbIQxfES3nSx1/oYNyuZQ=="],
+    "jose": ["jose@5.10.0", "", {}, "sha512-s+3Al/p9g32Iq+oqXxkW//7jk2Vig6FF1CFqzVXoTUXt2qz89YWbL+OwS17NFYEvxC35n0FKeGO2LGYSxeM2Gg=="],
 
     "js-tokens": ["js-tokens@9.0.1", "", {}, "sha512-mxa9E9ITFOt0ban3j6L5MpjwegGz6lBQmM1IJkWeBZGcMxto50+eWdjC/52xDbS2vy0k7vIMK0Fe2wfL9OQSpQ=="],
 
@@ -1526,6 +1526,8 @@
     "@dotenvx/dotenvx/execa": ["execa@5.1.1", "", { "dependencies": { "cross-spawn": "^7.0.3", "get-stream": "^6.0.0", "human-signals": "^2.1.0", "is-stream": "^2.0.0", "merge-stream": "^2.0.0", "npm-run-path": "^4.0.1", "onetime": "^5.1.2", "signal-exit": "^3.0.3", "strip-final-newline": "^2.0.0" } }, "sha512-8uSpZZocAZRBAPIEINJj3Lo9HyGitllczc27Eh5YYojjMFMn8yHMDMaUHE2Jqfq05D/wucwI4JGURyXt1vchyg=="],
 
     "@dotenvx/dotenvx/picomatch": ["picomatch@4.0.3", "", {}, "sha512-5gTmgEY/sqK6gFXLIsQNH19lWb4ebPDLA4SdLP7dsWkIXHWlG66oPuVvXSGFPppYZz8ZDZq0dYYrbHfBCVUb1Q=="],
+
+    "@modelcontextprotocol/sdk/jose": ["jose@6.2.2", "", {}, "sha512-d7kPDd34KO/YnzaDOlikGpOurfF0ByC2sEV4cANCtdqLlTfBlw2p14O/5d/zv40gJPbIQxfES3nSx1/oYNyuZQ=="],
 
     "@modelcontextprotocol/sdk/zod": ["zod@4.3.6", "", {}, "sha512-rftlrkhHZOcjDwkGlnUtZZkvaPHCsDATp4pGpuOOMDaTdDDXF91wuVDJoWoPsKX/3YPQ5fHuF3STjcYyKr+Qhg=="],
 

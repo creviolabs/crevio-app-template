@@ -1,14 +1,14 @@
 import { LogIn, Store } from "lucide-react";
 import Image from "next/image";
 import Link from "next/link";
+import { features } from "@/config/features";
 
 interface HeaderProps {
 	name: string;
 	avatarUrl?: string | null;
-	hasBlog?: boolean;
 }
 
-export function Header({ name, avatarUrl, hasBlog }: HeaderProps) {
+export function Header({ name, avatarUrl }: HeaderProps) {
 	return (
 		<header className="sticky top-0 z-50 border-b border-border/40 bg-background/80 backdrop-blur-lg">
 			<div className="container flex h-14 items-center justify-between">
@@ -32,7 +32,16 @@ export function Header({ name, avatarUrl, hasBlog }: HeaderProps) {
 						{name}
 					</Link>
 
-					{hasBlog && (
+					{features.bookings && (
+						<Link
+							href="/book"
+							className="text-sm text-muted-foreground transition-colors hover:text-foreground"
+						>
+							Book
+						</Link>
+					)}
+
+					{features.blog && (
 						<Link
 							href="/blog"
 							className="text-sm text-muted-foreground transition-colors hover:text-foreground"
@@ -42,15 +51,17 @@ export function Header({ name, avatarUrl, hasBlog }: HeaderProps) {
 					)}
 				</nav>
 
-				<a
-					href="https://crevio.co/users/login"
-					target="_blank"
-					rel="noopener noreferrer"
-					className="flex items-center gap-1.5 text-xs text-muted-foreground transition-colors hover:text-foreground"
-				>
-					<LogIn className="size-3.5" />
-					<span className="hidden sm:inline">Log in</span>
-				</a>
+				{features.auth && (
+					<a
+						href="https://crevio.co/users/login"
+						target="_blank"
+						rel="noopener noreferrer"
+						className="flex items-center gap-1.5 text-xs text-muted-foreground transition-colors hover:text-foreground"
+					>
+						<LogIn className="size-3.5" />
+						<span className="hidden sm:inline">Log in</span>
+					</a>
+				)}
 			</div>
 		</header>
 	);

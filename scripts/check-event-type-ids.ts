@@ -1,8 +1,8 @@
 /**
- * Build-time guard: fails the build when a <CrevioForm> is wired to an
- * empty formId or one that isn't a Form prefix id ("form_..."). An unwired
- * form builds fine but silently renders the "form isn't available" fallback
- * in production — this turns that into a hard build error.
+ * Build-time guard: fails the build when a <CrevioBooking> is wired to an
+ * empty eventTypeId or one that isn't an EventType prefix id ("etype_...").
+ * An unwired scheduler builds fine but silently renders the "booking isn't
+ * available" fallback in production — this turns that into a hard build error.
  *
  * Static check only: inline string literals and same-file consts. Anything
  * else (imports, props) is skipped.
@@ -10,7 +10,8 @@
 import { readFileSync } from "node:fs";
 import path from "node:path";
 
-const USAGE_RE = /<CrevioForm\b[^>]*?formId=\s*(\{[^}]*\}|"[^"]*"|'[^']*')/gs;
+const USAGE_RE =
+	/<CrevioBooking\b[^>]*?eventTypeId=\s*(\{[^}]*\}|"[^"]*"|'[^']*')/gs;
 const STRING_LITERAL = /^["'`]([^"'`$]*)["'`]$/;
 
 export function checkSource(source: string, file: string): string[] {
@@ -34,11 +35,11 @@ export function checkSource(source: string, file: string): string[] {
 		if (literal === undefined) continue;
 		if (literal === "") {
 			problems.push(
-				`${file}: <CrevioForm formId=${inner}> resolves to an empty string`,
+				`${file}: <CrevioBooking eventTypeId=${inner}> resolves to an empty string`,
 			);
-		} else if (!literal.startsWith("form_")) {
+		} else if (!literal.startsWith("etype_")) {
 			problems.push(
-				`${file}: <CrevioForm formId=${inner}> is "${literal}" — not a Form prefix id ("form_...")`,
+				`${file}: <CrevioBooking eventTypeId=${inner}> is "${literal}" — not an EventType prefix id ("etype_...")`,
 			);
 		}
 	}
@@ -50,8 +51,10 @@ if (import.meta.main) {
 	const root = path.resolve(import.meta.dir, "..");
 
 	const features = readFileSync(path.join(root, "config/features.ts"), "utf8");
-	if (!/\bforms:\s*true\b/.test(features)) {
-		console.log("✓ CrevioForm formId check skipped (forms feature off)");
+	if (!/\bbookings:\s*true\b/.test(features)) {
+		console.log(
+			"✓ CrevioBooking eventTypeId check skipped (bookings feature off)",
+		);
 		process.exit(0);
 	}
 
@@ -67,16 +70,17 @@ if (import.meta.main) {
 
 	if (problems.length > 0) {
 		console.error(
-			"✗ Build blocked: <CrevioForm> with a missing or invalid formId.\n",
+			"✗ Build blocked: <CrevioBooking> with a missing or invalid eventTypeId.\n",
 		);
 		for (const problem of problems) console.error(`  ${problem}`);
 		console.error(`
-Fix: create the Form via the crevio_api MCP (POST /v1/forms — define its fields
-there), then paste the returned prefix_id ("form_...") into the formId binding.
-If the page should not have a form, remove the <CrevioForm>/<CtaSection> usage.
+Fix: create the EventType via the crevio_api MCP (POST /v1/event-types — define
+its duration, location, and pricing there), then paste the returned prefix_id
+("etype_...") into the eventTypeId binding. If the page should not offer a
+booking, remove the <CrevioBooking> usage.
 `);
 		process.exit(1);
 	}
 
-	console.log("✓ CrevioForm formId check passed");
+	console.log("✓ CrevioBooking eventTypeId check passed");
 }

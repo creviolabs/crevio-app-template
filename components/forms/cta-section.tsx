@@ -1,4 +1,5 @@
 import { CrevioForm } from "@/components/forms/crevio-form";
+import { cn } from "@/lib/utils";
 
 /**
  * Set this to the prefix_id ("form_...") returned when you provision the
@@ -12,6 +13,7 @@ const FORM_ID: string = "";
 interface CtaSectionProps {
 	heading?: string;
 	description?: string;
+	className?: string;
 }
 
 /**
@@ -27,9 +29,10 @@ interface CtaSectionProps {
 export function CtaSection({
 	heading = "Stay in the loop",
 	description = "Subscribe for occasional updates straight to your inbox.",
+	className,
 }: CtaSectionProps) {
 	return (
-		<section className="border-t border-border/40 py-14">
+		<section className={cn("border-t border-border/40 py-14", className)}>
 			<div className="container mx-auto max-w-md">
 				<CrevioForm
 					formId={FORM_ID}

@@ -11,18 +11,21 @@ import { discoverStaticRoutes } from "@/lib/sitemap-routes";
 // Routes that only exist while their feature module is enabled (config/features).
 const FEATURE_ROUTES: Record<string, FeatureKey> = {
 	"/blog": "blog",
-	"/book": "bookings",
 	"/dashboard": "auth",
 };
 
 // Static routes auto-discovered from `app/` (see `lib/sitemap-routes.ts`).
 // Override priority below, or add a discovered path here to hide it. Disabled
 // feature modules are dropped automatically.
-const EXCLUDED_STATIC_ROUTES = new Set<string>(
-	Object.entries(FEATURE_ROUTES)
+// Auth / members routes are noindex — never list them in the sitemap.
+const NOINDEX_ROUTES = ["/login", "/dashboard"];
+
+const EXCLUDED_STATIC_ROUTES = new Set<string>([
+	...NOINDEX_ROUTES,
+	...Object.entries(FEATURE_ROUTES)
 		.filter(([, key]) => !features[key])
 		.map(([route]) => route),
-);
+]);
 const STATIC_PRIORITY: Record<string, number> = { "/": 1, "/blog": 0.8 };
 const DEFAULT_STATIC_PRIORITY = 0.5;
 const STATIC_CHANGE_FREQUENCY: MetadataRoute.Sitemap[number]["changeFrequency"] =

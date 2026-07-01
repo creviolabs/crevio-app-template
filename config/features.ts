@@ -3,10 +3,10 @@ import { notFound } from "next/navigation";
 // Built-in modules — flip a flag to add/remove that capability everywhere.
 export const features = {
 	auth: true, // Sign in with Crevio + gated /dashboard
-	bookings: true, // /book scheduling
+	bookings: true, // <CrevioBooking> embeddable scheduler
 	blog: true, // /blog
-	forms: false, // contact / newsletter form
-	legal: false, // /legal policy pages + footer links
+	forms: true, // contact / newsletter form
+	legal: true, // /legal policy pages + footer links
 } as const;
 
 export type FeatureKey = keyof typeof features;

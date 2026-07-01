@@ -7,8 +7,8 @@ import {
 	SidebarTrigger,
 } from "@/components/ui/sidebar";
 import { TooltipProvider } from "@/components/ui/tooltip";
-import { getAccount } from "@/lib/data";
 import { requireFeature } from "@/config/features";
+import { getAccount } from "@/lib/data";
 import { getViewer, requireSession } from "@/lib/session";
 
 // The whole /dashboard group is gated here, once, at the layout — pages inside

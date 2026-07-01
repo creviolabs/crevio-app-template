@@ -1,8 +1,8 @@
 import { ArrowRight } from "lucide-react";
 import type { Metadata } from "next";
 import Link from "next/link";
-import { getAccount, getBlogPosts } from "@/lib/data";
 import { requireFeature } from "@/config/features";
+import { getAccount, getBlogPosts } from "@/lib/data";
 
 export async function generateMetadata(): Promise<Metadata> {
 	try {

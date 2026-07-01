@@ -56,3 +56,13 @@ export async function getBlogPost(slugOrId: string) {
 	const crevio = createCrevioClient();
 	return crevio.blogPosts.get({ idOrSlug: slugOrId });
 }
+
+export async function getEventType(slugOrId: string) {
+	"use cache";
+	cacheLife("minutes");
+	const crevio = createCrevioClient();
+	// The event types API resolves only by prefix_id (etype_…), not slug, so we
+	// match against the list to support human-friendly slugs in the URL.
+	const { data } = await crevio.eventTypes.list({ limit: 100 });
+	return data.find((e) => e.slug === slugOrId || e.id === slugOrId) ?? null;
+}

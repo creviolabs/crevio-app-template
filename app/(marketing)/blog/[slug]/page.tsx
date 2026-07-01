@@ -4,8 +4,8 @@ import type { Metadata } from "next";
 import Link from "next/link";
 import { notFound } from "next/navigation";
 import { CtaSection } from "@/components/forms/cta-section";
-import { getAccount, getBlogPost } from "@/lib/data";
 import { features, requireFeature } from "@/config/features";
+import { getAccount, getBlogPost } from "@/lib/data";
 import { getAppUrl } from "@/lib/site-url";
 
 export async function generateMetadata({

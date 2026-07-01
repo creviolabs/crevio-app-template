@@ -2,12 +2,20 @@ import { ChevronRight, Package } from "lucide-react";
 import type { Metadata } from "next";
 import Image from "next/image";
 import Link from "next/link";
+import { CrevioBooking } from "@/components/booking/crevio-booking";
 import { CtaSection } from "@/components/forms/cta-section";
 import { ProductCard } from "@/components/product-card";
 import { features } from "@/config/features";
 import { getAccount, getActiveProducts } from "@/lib/data";
 
 const PAGE_SIZE = 9;
+
+/**
+ * EventType prefix_id ("etype_...") from `crevio_api` (POST /v1/event-types).
+ * Build fails while empty and <CrevioBooking> is rendered; remove it below to
+ * drop the scheduler.
+ */
+const EVENT_TYPE_ID: string = "";
 
 export async function generateMetadata(): Promise<Metadata> {
 	try {
@@ -130,6 +138,17 @@ export default async function Home({
 					</>
 				)}
 			</div>
+			{features.bookings && (
+				<section className="border-t border-border/40 py-14">
+					<div className="container mx-auto max-w-2xl">
+						<CrevioBooking
+							eventTypeId={EVENT_TYPE_ID}
+							heading="Book a time"
+							description="Pick a date and time that works for you."
+						/>
+					</div>
+				</section>
+			)}
 			{features.forms && (
 				<CtaSection
 					description={`Subscribe to ${account?.name ?? "us"} for occasional updates straight to your inbox.`}

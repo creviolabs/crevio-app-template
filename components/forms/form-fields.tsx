@@ -8,8 +8,14 @@ import { CheckCircle2, Loader2 } from "lucide-react";
 import { useActionState } from "react";
 import { useFormStatus } from "react-dom";
 import { Button } from "@/components/ui/button";
+import { Checkbox } from "@/components/ui/checkbox";
 import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
+import {
+	NativeSelect,
+	NativeSelectOption,
+} from "@/components/ui/native-select";
+import { RadioGroup, RadioGroupItem } from "@/components/ui/radio-group";
 import { Textarea } from "@/components/ui/textarea";
 import { type SubmitFormState, submitForm } from "@/lib/actions/submit-form";
 
@@ -53,7 +59,7 @@ export function FormFields({
 	if (state.status === "success") {
 		return (
 			<div className={className}>
-				<div className="flex flex-col items-center gap-3 rounded-2xl border border-border/60 bg-muted/30 p-10 text-center">
+				<div className="flex flex-col items-center gap-3 py-10 text-center">
 					<div className="flex size-12 items-center justify-center rounded-full bg-emerald-500/10 text-emerald-600">
 						<CheckCircle2 className="size-6" />
 					</div>
@@ -148,54 +154,64 @@ function Field({
 			)}
 
 			{field.fieldType === "select" && (
-				<select
+				<NativeSelect
 					id={labelId}
 					name={field.id}
 					required={field.required ?? false}
 					defaultValue={previousString}
-					className="flex h-9 w-full items-center rounded-lg border border-input bg-transparent px-2.5 text-sm outline-none focus-visible:border-ring focus-visible:ring-3 focus-visible:ring-ring/50"
+					className="w-full"
 				>
-					<option value="">Select…</option>
+					<NativeSelectOption value="">Select…</NativeSelectOption>
 					{field.options.map((option) => (
-						<option key={option} value={option}>
+						<NativeSelectOption key={option} value={option}>
 							{option}
-						</option>
+						</NativeSelectOption>
 					))}
-				</select>
+				</NativeSelect>
 			)}
 
 			{field.fieldType === "radio" && (
-				<div className="grid gap-2">
-					{field.options.map((option) => (
-						<label key={option} className="flex items-center gap-2 text-sm">
-							<input
-								type="radio"
-								name={field.id}
-								value={option}
-								required={field.required ?? false}
-								defaultChecked={previousString === option}
-								className="size-4"
-							/>
-							{option}
-						</label>
-					))}
-				</div>
+				<RadioGroup
+					name={field.id}
+					defaultValue={previousString}
+					required={field.required ?? false}
+				>
+					{field.options.map((option, i) => {
+						const optionId = `${labelId}-${i}`;
+						return (
+							<label
+								key={option}
+								htmlFor={optionId}
+								className="flex items-center gap-2 text-sm"
+							>
+								<RadioGroupItem id={optionId} value={option} />
+								{option}
+							</label>
+						);
+					})}
+				</RadioGroup>
 			)}
 
 			{field.fieldType === "checkbox" && (
 				<div className="grid gap-2">
-					{field.options.map((option) => (
-						<label key={option} className="flex items-center gap-2 text-sm">
-							<input
-								type="checkbox"
-								name={field.id}
-								value={option}
-								defaultChecked={previousArray.includes(option)}
-								className="size-4"
-							/>
-							{option}
-						</label>
-					))}
+					{field.options.map((option, i) => {
+						const optionId = `${labelId}-${i}`;
+						return (
+							<label
+								key={option}
+								htmlFor={optionId}
+								className="flex items-center gap-2 text-sm"
+							>
+								<Checkbox
+									id={optionId}
+									name={field.id}
+									value={option}
+									defaultChecked={previousArray.includes(option)}
+								/>
+								{option}
+							</label>
+						);
+					})}
 				</div>
 			)}
 		</div>

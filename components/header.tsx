@@ -1,7 +1,9 @@
 import { LogIn, Store } from "lucide-react";
 import Image from "next/image";
 import Link from "next/link";
+import { buttonVariants } from "@/components/ui/button";
 import { features } from "@/config/features";
+import { cn } from "@/lib/utils";
 
 interface HeaderProps {
 	name: string;
@@ -32,15 +34,6 @@ export function Header({ name, avatarUrl }: HeaderProps) {
 						{name}
 					</Link>
 
-					{features.bookings && (
-						<Link
-							href="/book"
-							className="text-sm text-muted-foreground transition-colors hover:text-foreground"
-						>
-							Book
-						</Link>
-					)}
-
 					{features.blog && (
 						<Link
 							href="/blog"
@@ -52,15 +45,13 @@ export function Header({ name, avatarUrl }: HeaderProps) {
 				</nav>
 
 				{features.auth && (
-					<a
-						href="https://crevio.co/users/login"
-						target="_blank"
-						rel="noopener noreferrer"
-						className="flex items-center gap-1.5 text-xs text-muted-foreground transition-colors hover:text-foreground"
+					<Link
+						href="/login"
+						className={cn(buttonVariants({ variant: "outline", size: "sm" }))}
 					>
 						<LogIn className="size-3.5" />
 						<span className="hidden sm:inline">Log in</span>
-					</a>
+					</Link>
 				)}
 			</div>
 		</header>

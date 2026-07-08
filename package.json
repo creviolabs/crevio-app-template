@@ -7,6 +7,7 @@
 		"build": "bun run check:forms && bun run check:bookings && vinext build",
 		"check:forms": "bun scripts/check-form-ids.ts",
 		"check:bookings": "bun scripts/check-event-type-ids.ts",
+		"preflight": "bun scripts/preflight.ts",
 		"cf-typegen": "wrangler types",
 		"deploy": "vinext deploy",
 		"dev": "vp dev",

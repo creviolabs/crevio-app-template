@@ -3,6 +3,8 @@ import { IframeNavigationHandler } from "@/components/iframe-navigation-handler"
 import { getAppUrl } from "@/lib/site-url";
 import "./app.css";
 
+// Keep lazy: getAppUrl() reads a request-time env binding, so a module-level
+// `export const metadata` would throw at worker startup and fail the deploy.
 export async function generateMetadata(): Promise<Metadata> {
 	const siteUrl = getAppUrl();
 	return {

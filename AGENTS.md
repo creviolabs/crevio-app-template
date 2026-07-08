@@ -9,6 +9,7 @@ bun run dev          # vinext dev server
 bun run typecheck    # wrangler types + tsgo -b
 bun run check        # biome check --write --unsafe . (auto-fixes lint + format)
 bun run build        # production build
+bun run preflight     # boot the built worker in workerd (run after build, before deploy)
 ```
 
 ## Git
@@ -29,6 +30,12 @@ For rewriting history non-interactively, use `GIT_SEQUENCE_EDITOR=:` and `GIT_ED
 - Shadcn/UI (in `components/ui/`) — biome lint disabled there, do not edit
 - TailwindCSS 4 with theme via CSS variables (oklch) in `app/app.css`
 - Data layer via `@crevio/sdk` in `lib/data.ts`
+
+## Cloudflare Workers runtime
+
+This ships as a **Cloudflare Worker**, not Node. Module top-level runs once at worker **startup**, with no request in scope — so **env bindings (`process.env.*`, secrets) and anything derived from them are unavailable there**; they only exist inside request handlers. Any env read, `fetch`, `new URL(env)`, client/config construction, or throwing side effect at module scope crashes the worker at startup. Do that work per-request instead — in route handlers, `generateMetadata()`, loaders — never in a module-level const.
+
+It's invisible until deploy: it passes `build` and `wrangler --dry-run` (neither runs the worker) and only fails with an opaque CF `500 (code 10002)`. **Before deploying, run `bun run build && bun run preflight`** — it boots the worker in workerd and catches any startup failure locally (`dev`/`start` use Vite/Node and won't).
 
 ## Feature modules
 

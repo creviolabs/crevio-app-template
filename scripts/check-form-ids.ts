@@ -74,6 +74,8 @@ if (import.meta.main) {
 Fix: create the Form via the crevio_api MCP (POST /v1/forms — define its fields
 there), then paste the returned prefix_id ("form_...") into the formId binding.
 If the page should not have a form, remove the <CrevioForm>/<CtaSection> usage.
+If the site needs no forms at all, set \`forms: false\` in config/features.ts —
+feature-gated pages drop their form sections and this check skips.
 `);
 		process.exit(1);
 	}

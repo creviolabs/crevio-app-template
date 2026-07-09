@@ -77,7 +77,8 @@ if (import.meta.main) {
 Fix: create the EventType via the crevio_api MCP (POST /v1/event-types — define
 its duration, location, and pricing there), then paste the returned prefix_id
 ("etype_...") into the eventTypeId binding. If the page should not offer a
-booking, remove the <CrevioBooking> usage.
+booking, remove the <CrevioBooking> usage. If the site needs no bookings at
+all, set \`bookings: false\` in config/features.ts and this check skips.
 `);
 		process.exit(1);
 	}

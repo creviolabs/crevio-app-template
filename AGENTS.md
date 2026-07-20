@@ -52,6 +52,6 @@ Every `<CrevioForm>` must be bound to a real Form: create it first (`POST /v1/fo
 Skills live in `.claude/skills/` — load the relevant `SKILL.md` before working in its area.
 
 - `crevio-api` — Crevio API/SDK, `lib/data.ts`, `<CrevioForm>`
-- `ui-ux-pro-max` — building UI components and pages
+- `frontend-design` — building UI components and pages
 - `vercel-react-best-practices` — React 19 + Next.js performance
 - `cloudflare` / `wrangler` / `workers-best-practices` — Workers, D1/KV/R2, deploys

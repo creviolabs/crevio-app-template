@@ -9,6 +9,7 @@ import { defineConfig } from "vite";
 
 export default defineConfig(({ mode }) => ({
 	server: {
+		allowedHosts: true,
 		host: "::",
 		port: 3000,
 		hmr: {

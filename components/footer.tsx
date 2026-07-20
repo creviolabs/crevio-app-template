@@ -114,17 +114,6 @@ export function Footer({ name, socialLinks, legalPages }: FooterProps) {
 						<p>
 							&copy; {new Date().getFullYear()} {name}
 						</p>
-						<p>
-							Powered by{" "}
-							<a
-								href="https://crevio.co"
-								target="_blank"
-								rel="noopener noreferrer"
-								className="underline underline-offset-4 transition-colors hover:text-foreground"
-							>
-								Crevio
-							</a>
-						</p>
 					</div>
 				</div>
 			</div>

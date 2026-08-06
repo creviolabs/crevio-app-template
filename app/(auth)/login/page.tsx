@@ -16,7 +16,7 @@ export const metadata: Metadata = {
 // Only internal paths are honored as the post-sign-in destination — guards
 // against an open redirect via ?return_to=//evil.com.
 function safeReturnTo(value?: string): string {
-	if (!value || !value.startsWith("/") || value.startsWith("//")) {
+	if (!value?.startsWith("/") || value.startsWith("//")) {
 		return "/dashboard";
 	}
 	return value;

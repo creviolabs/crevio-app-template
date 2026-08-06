@@ -37,6 +37,19 @@ This ships as a **Cloudflare Worker**, not Node. Module top-level runs once at w
 
 It's invisible until deploy: it passes `build` and `wrangler --dry-run` (neither runs the worker) and only fails with an opaque CF `500 (code 10002)`. **Before deploying, run `bun run build && bun run preflight`** — it boots the worker in workerd and catches any startup failure locally (`dev`/`start` use Vite/Node and won't).
 
+## Debugging locally (Local Explorer)
+
+The dev server serves the Local Explorer UI at `/cdn-cgi/explorer` and its API at
+`/cdn-cgi/explorer/api` — zero config via the Cloudflare Vite plugin. `GET` the API root
+for its OpenAPI spec, then query traces and logs (`POST /local/observability/query` —
+read-only SQL over `spans`/`logs`, a span per request, `fetch()` and binding call) or
+read and seed KV / R2 / D1. Use it before adding `console.log` or redeploying: a failing
+SDK call or slow route shows up as the exact span with its error and timing.
+
+Read the startup banner for the port (3000 is often taken); it prints the
+`/cdn-cgi/local/explorer/api` alias — both forms work. It can't catch the module-scope
+startup crash above — that still needs `bun run build && bun run preflight`.
+
 ## Feature modules
 
 `config/features.ts` is the master switch for built-in capabilities — `auth` (sign-in + `/dashboard` members area), `bookings` (`<CrevioBooking>` scheduler), `blog`, `forms` (contact/newsletter), `legal`. Enable/disable each to fit the use case — don't ship every module. A coach selling calls wants `bookings`; a newsletter/creator wants `forms` + `blog`; a course seller wants `auth`. Flipping a flag off drops its routes, nav, and sitemap entries automatically; flipping on requires wiring real ids (`form_…`, `etype_…`).

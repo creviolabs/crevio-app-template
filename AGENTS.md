@@ -58,17 +58,17 @@ startup crash above — that still needs `bun run build && bun run preflight`.
 
 `config/features.ts` is the master switch for built-in capabilities — `auth` (sign-in + `/dashboard` members area), `bookings` (`<CrevioBooking>` scheduler), `blog`, `forms` (contact/newsletter), `legal`. Enable/disable each to fit the use case — don't ship every module. A coach selling calls wants `bookings`; a newsletter/creator wants `forms` + `blog`; a course seller wants `auth`. Flipping a flag off drops its routes, nav, and sitemap entries automatically; flipping on requires wiring real ids (`form_…`, `etype_…`).
 
-## Crevio API, SDK & Forms
+## Crevio API, SDK & components
 
 See the `crevio-api` skill — it fetches the canonical hosted manifest at `https://api.crevio.co/skill.md`, the single source of truth for the Crevio API, SDK, and Forms.
 
-Every `<CrevioForm>` must be bound to a real Form: create it first (`POST /v1/forms` via the `crevio_api` MCP), then use the returned prefix_id (`form_...`) as `formId`. The build fails on an empty or non-`form_` static `formId` (`scripts/check-form-ids.ts`) — bind a real Form or remove the usage.
+Crevio components render a "not available" fallback unless wired to a record you create FIRST via the `crevio_api` MCP — `<CrevioForm formId>` from `POST /v1/forms` (`form_…`), `<CrevioBooking eventTypeId>` from `POST /v1/event-types` (`etype_…`). Bind the `form_…`/`etype_…` id it returns. `bun run check:wiring` fails the build on an unwired one a route renders; an orphan nothing imports only warns, so delete it rather than switching the whole feature off.
 
 ## Skills
 
 Skills live in `.claude/skills/` — load the relevant `SKILL.md` before working in its area.
 
-- `crevio-api` — Crevio API/SDK, `lib/data.ts`, `<CrevioForm>`
+- `crevio-api` — Crevio API/SDK, `lib/data.ts`, `<CrevioForm>` / `<CrevioBooking>`
 - `frontend-design` — building UI components and pages
 - `vercel-react-best-practices` — React 19 + Next.js performance
 - `cloudflare` / `wrangler` / `workers-best-practices` — Workers, D1/KV/R2, deploys

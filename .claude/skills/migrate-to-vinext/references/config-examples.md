@@ -94,7 +94,7 @@ Minimal config for deployment:
 }
 ```
 
-For custom worker entries (e.g., adding KV cache, image optimization bindings):
+For custom worker entries (e.g., image optimization bindings). Note: Crevio sites do not get a KV namespace — see troubleshooting.md.
 
 ```jsonc
 {

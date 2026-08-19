@@ -76,8 +76,12 @@ imported from \node_modules.pnpm\validator@13.15.26\node_modules\validator\es\li
 **Fix:** Add `"images": { "binding": "IMAGES" }` and `"assets": { "binding": "ASSETS" }` to wrangler.jsonc.
 
 **Symptom:** ISR pages not caching across requests.
-**Cause:** Default `MemoryCacheHandler` doesn't persist across Worker invocations.
-**Fix:** Use `KVCacheHandler` from `vinext/cloudflare` with a KV namespace binding. See [config-examples.md](config-examples.md).
+**Cause:** The default in-memory handler does not persist across Worker invocations.
+**Fix on a Crevio site: leave it.** Crevio deliberately does NOT provision a
+per-site KV namespace — KV caps at 1,000 namespaces per account, a ceiling a
+per-tenant resource reaches long before the tenant count does, so response
+caching belongs at the origin. Do not add a `kv_namespaces` binding to a site's
+wrangler.jsonc; the deploy strips bindings it has no record of.
 
 ## Verification Checklist
 

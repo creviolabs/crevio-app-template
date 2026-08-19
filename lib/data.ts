@@ -1,3 +1,4 @@
+// NOTE: `cacheLife` windows are best-effort and per-isolate.
 import { cacheLife } from "next/cache";
 import { createCrevioClient } from "./crevio-client";
 

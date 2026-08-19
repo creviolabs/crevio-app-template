@@ -47,7 +47,7 @@ The dev server serves the Local Explorer UI at `/cdn-cgi/explorer` and its API a
 `/cdn-cgi/explorer/api` — zero config via the Cloudflare Vite plugin. `GET` the API root
 for its OpenAPI spec, then query traces and logs (`POST /local/observability/query` —
 read-only SQL over `spans`/`logs`, a span per request, `fetch()` and binding call) or
-read and seed KV / R2 / D1. Use it before adding `console.log` or redeploying: a failing
+read and seed R2 / D1. Use it before adding `console.log` or redeploying: a failing
 SDK call or slow route shows up as the exact span with its error and timing.
 
 Read the startup banner for the port (3000 is often taken); it prints the

@@ -27,7 +27,7 @@ import {
 } from "@tanstack/react-start/server";
 import { z } from "zod";
 import { type AccessLevel, hasMinimumAccess } from "./access";
-import { createCrevioClient, TTL } from "./crevio-client";
+import { createCrevioClient } from "./crevio-client";
 
 // A synthetic viewer used only in dev when nothing else identifies the visitor,
 // so an agent (or human) iterating on the template sees the full gated
@@ -118,7 +118,7 @@ function getSession(): Promise<CrevioUser | null> {
  */
 async function getViewer(session: CrevioUser): Promise<Viewer> {
 	try {
-		const profile = await createCrevioClient(TTL.minutes).users.get({
+		const profile = await createCrevioClient().users.get({
 			id: session.userId,
 		});
 		return {

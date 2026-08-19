@@ -1,5 +1,5 @@
 import { createServerFn } from "@tanstack/react-start";
-import { createCrevioClient, TTL } from "@/lib/crevio-client";
+import { createCrevioClient } from "@/lib/crevio-client";
 
 export type SubmitFormState = {
 	status: "idle" | "success" | "error";
@@ -18,7 +18,7 @@ function formDataValidator(data: unknown): FormData {
 export const getForm = createServerFn({ method: "GET" })
 	.validator((data: { formId: string }) => data)
 	.handler(({ data }) =>
-		createCrevioClient(TTL.minutes)
+		createCrevioClient()
 			.forms.get({ id: data.formId })
 			.catch(() => null),
 	);
@@ -45,7 +45,7 @@ export const submitForm = createServerFn({ method: "POST" })
 		}
 
 		try {
-			const crevio = createCrevioClient(TTL.minutes);
+			const crevio = createCrevioClient();
 			const form = await crevio.forms.get({ id: formId });
 
 			const emailField = form.formFields.find((f) => f.fieldType === "email");

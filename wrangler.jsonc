@@ -21,12 +21,6 @@
 			"bucket_name": "placeholder-r2-bucket"
 		}
 	],
-	"kv_namespaces": [
-		{
-			"binding": "SITE_CACHE",
-			"id": "placeholder-kv-id"
-		}
-	],
 	"observability": {
 		"enabled": true,
 		"head_sampling_rate": 1

@@ -10,7 +10,7 @@
 import { notFound } from "@tanstack/react-router";
 import { createServerFn } from "@tanstack/react-start";
 import { z } from "zod";
-import { createCrevioClient, TTL } from "./crevio-client";
+import { createCrevioClient } from "./crevio-client";
 
 const bySlug = z.object({ slug: z.string() });
 
@@ -27,21 +27,19 @@ async function orNotFound<T>(read: Promise<T>): Promise<T> {
 
 /** The account, or null when it can't be read — for chrome that must still render. */
 export const getAccountOrNull = createServerFn({ method: "GET" }).handler(() =>
-	createCrevioClient(TTL.hours)
+	createCrevioClient()
 		.account.get()
 		.catch(() => null),
 );
 
 export const getLegalPages = createServerFn({ method: "GET" }).handler(() =>
-	createCrevioClient(TTL.hours).legalPages.list(),
+	createCrevioClient().legalPages.list(),
 );
 
 export const getLegalPage = createServerFn({ method: "GET" })
 	.validator(bySlug)
 	.handler(({ data }) =>
-		orNotFound(
-			createCrevioClient(TTL.hours).legalPages.get({ idOrSlug: data.slug }),
-		),
+		orNotFound(createCrevioClient().legalPages.get({ idOrSlug: data.slug })),
 	);
 
 export const getActiveProducts = createServerFn({ method: "GET" })
@@ -52,7 +50,7 @@ export const getActiveProducts = createServerFn({ method: "GET" })
 		}),
 	)
 	.handler(({ data }) =>
-		createCrevioClient(TTL.minutes).products.list({
+		createCrevioClient().products.list({
 			status: "active",
 			...(data.limit && { limit: data.limit }),
 			...(data.startingAfter && { startingAfter: data.startingAfter }),
@@ -63,7 +61,7 @@ export const getProduct = createServerFn({ method: "GET" })
 	.validator(bySlug.extend({ expand: z.string().optional() }))
 	.handler(({ data }) =>
 		orNotFound(
-			createCrevioClient(TTL.minutes).products.get({
+			createCrevioClient().products.get({
 				idOrSlug: data.slug,
 				...(data.expand && { expand: data.expand }),
 			}),
@@ -71,22 +69,20 @@ export const getProduct = createServerFn({ method: "GET" })
 	);
 
 export const getBlogPosts = createServerFn({ method: "GET" }).handler(() =>
-	createCrevioClient(TTL.minutes).blogPosts.list(),
+	createCrevioClient().blogPosts.list(),
 );
 
 export const getBlogPost = createServerFn({ method: "GET" })
 	.validator(bySlug)
 	.handler(({ data }) =>
-		orNotFound(
-			createCrevioClient(TTL.minutes).blogPosts.get({ idOrSlug: data.slug }),
-		),
+		orNotFound(createCrevioClient().blogPosts.get({ idOrSlug: data.slug })),
 	);
 
 /** An EventType by its prefix_id (`etype_…`) — what `<CrevioBooking>` binds. */
 export const getEventType = createServerFn({ method: "GET" })
 	.validator(z.object({ id: z.string() }))
 	.handler(({ data }) =>
-		createCrevioClient(TTL.minutes)
+		createCrevioClient()
 			.eventTypes.get({ id: data.id })
 			.catch(() => null),
 	);

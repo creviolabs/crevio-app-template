@@ -94,7 +94,7 @@ Never call the SDK from a component. Add a new read to `src/lib/data.ts` and loa
 
 `get`-style readers throw `notFound()` for a slug the API doesn't have, so a loader just calls them — no `.catch(() => null)` then `throw notFound()`. Use `getAccountOrNull()` for chrome that must render regardless. Concurrent identical reads in one render collapse into a single origin fetch (`src/lib/cache.ts`), so a layout and its child both reading the account cost one request.
 
-Reads are cached in the `SITE_CACHE` KV namespace, keyed per API key, via a fetcher layered under the SDK (`src/lib/cache.ts`). Pick the window with the `TTL` constant when constructing the client — `TTL.none` opts out.
+There is no per-site response cache. Duplicate reads *within one request* collapse into a single origin call (`src/lib/cache.ts`), so a layout and its child both reading the account cost one request — but nothing is persisted between requests. Response caching belongs at the origin, not in a per-tenant KV namespace.
 
 ## Metadata
 
@@ -131,9 +131,8 @@ The dev server serves the Local Explorer UI at `/cdn-cgi/explorer` and its API a
 `/cdn-cgi/explorer/api` — zero config via the Cloudflare Vite plugin. `GET` the API root
 for its OpenAPI spec, then query traces and logs (`POST /local/observability/query` —
 read-only SQL over `spans`/`logs`, a span per request, `fetch()` and binding call) or
-read and seed KV / R2 / D1. Use it before adding `console.log` or redeploying: a failing
-SDK call or slow route shows up as the exact span with its error and timing. It is also
-how you inspect what `SITE_CACHE` currently holds.
+read and seed R2 / D1. Use it before adding `console.log` or redeploying: a failing
+SDK call or slow route shows up as the exact span with its error and timing.
 
 Read the startup banner for the port (3000 is often taken); it prints the
 `/cdn-cgi/local/explorer/api` alias — both forms work. It can't catch the module-scope

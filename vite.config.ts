@@ -1,27 +1,23 @@
 import { cloudflare } from "@cloudflare/vite-plugin";
 import { crevioPlugins } from "@crevio/vite-plugins";
 import tailwindcss from "@tailwindcss/vite";
-import { cdnAdapter } from "@vinext/cloudflare/cache/cdn-adapter";
-import { kvDataAdapter } from "@vinext/cloudflare/cache/kv-data-adapter";
-import { imagesOptimizer } from "@vinext/cloudflare/images/images-optimizer";
-import vinext from "vinext";
+import { tanstackStart } from "@tanstack/react-start/plugin/vite";
+import react from "@vitejs/plugin-react";
 import { defineConfig } from "vite";
 
 export default defineConfig(({ mode }) => ({
 	server: {
 		port: 3000,
-		hmr: {
-			overlay: false,
-		},
+		hmr: { overlay: false },
+	},
+	resolve: {
+		// Resolve `@/*` from tsconfig.json rather than restating it here.
+		tsconfigPaths: true,
 	},
 	plugins: [
-		vinext({
-			images: { optimizer: imagesOptimizer() },
-			cache: { cdn: cdnAdapter(), data: kvDataAdapter() },
-		}),
-		cloudflare({
-			viteEnvironment: { name: "rsc", childEnvironments: ["ssr"] },
-		}),
+		cloudflare({ viteEnvironment: { name: "ssr" } }),
+		tanstackStart(),
+		react(),
 		tailwindcss(),
 		...crevioPlugins({
 			APP_ID: process.env.CREVIO_ACCOUNT_ID,

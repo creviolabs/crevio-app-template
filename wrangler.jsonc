@@ -3,15 +3,7 @@
 	"name": "crevio-app-template",
 	"compatibility_date": "2026-04-08",
 	"compatibility_flags": ["nodejs_compat"],
-	"main": "vinext/server/fetch-handler",
-	"cache": {
-		"enabled": true
-	},
-	"assets": {
-		"directory": "dist/client",
-		"not_found_handling": "none",
-		"binding": "ASSETS"
-	},
+	"main": "@tanstack/react-start/server-entry",
 	"images": {
 		"binding": "IMAGES"
 	},
@@ -31,7 +23,7 @@
 	],
 	"kv_namespaces": [
 		{
-			"binding": "VINEXT_KV_CACHE",
+			"binding": "SITE_CACHE",
 			"id": "placeholder-kv-id"
 		}
 	],

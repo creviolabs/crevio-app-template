@@ -1,0 +1,221 @@
+import type {
+	Form as CrevioForm,
+	FormField as CrevioFormField,
+} from "@crevio/sdk/models";
+import { CheckCircle2, Loader2 } from "lucide-react";
+import { useActionState } from "react";
+import { useFormStatus } from "react-dom";
+import { Button } from "@/components/ui/button";
+import { Checkbox } from "@/components/ui/checkbox";
+import { Input } from "@/components/ui/input";
+import { Label } from "@/components/ui/label";
+import {
+	NativeSelect,
+	NativeSelectOption,
+} from "@/components/ui/native-select";
+import { RadioGroup, RadioGroupItem } from "@/components/ui/radio-group";
+import { Textarea } from "@/components/ui/textarea";
+import { type SubmitFormState, submitForm } from "@/lib/actions/forms";
+
+interface FormFieldsProps {
+	form: CrevioForm;
+	heading?: string;
+	description?: string;
+	submitLabel: string;
+	className?: string;
+}
+
+const initialState: SubmitFormState = { status: "idle" };
+
+function SubmitButton({ label }: { label: string }) {
+	const { pending } = useFormStatus();
+	return (
+		<Button type="submit" disabled={pending} className="w-full sm:w-auto">
+			{pending ? (
+				<>
+					<Loader2 className="size-4 animate-spin" />
+					Submitting
+				</>
+			) : (
+				label
+			)}
+		</Button>
+	);
+}
+
+export function FormFields({
+	form,
+	heading,
+	description,
+	submitLabel,
+	className,
+}: FormFieldsProps) {
+	const [state, formAction] = useActionState(
+		(_prev: SubmitFormState, formData: FormData) =>
+			submitForm({ data: formData }),
+		initialState,
+	);
+	const previous = state.status === "error" ? state.values : undefined;
+
+	if (state.status === "success") {
+		return (
+			<div className={className}>
+				<div className="flex flex-col items-center gap-3 py-10 text-center">
+					<div className="flex size-12 items-center justify-center rounded-full bg-emerald-500/10 text-emerald-600">
+						<CheckCircle2 className="size-6" />
+					</div>
+					<p className="max-w-md text-sm text-muted-foreground">
+						{state.message}
+					</p>
+				</div>
+			</div>
+		);
+	}
+
+	return (
+		<div className={className}>
+			{(heading || description) && (
+				<div className="mb-6">
+					{heading && (
+						<h2 className="text-2xl font-semibold tracking-tight">{heading}</h2>
+					)}
+					{description && (
+						<p className="mt-2 text-sm text-muted-foreground">{description}</p>
+					)}
+				</div>
+			)}
+
+			<form action={formAction} className="grid gap-4">
+				<input type="hidden" name="formId" value={form.id} />
+				{form.formFields.map((field) => (
+					<Field key={field.id} field={field} previous={previous?.[field.id]} />
+				))}
+
+				{state.status === "error" && state.message && (
+					<p className="text-sm text-destructive" role="alert">
+						{state.message}
+					</p>
+				)}
+
+				<div className="flex items-center justify-end pt-2">
+					<SubmitButton label={submitLabel} />
+				</div>
+			</form>
+		</div>
+	);
+}
+
+function Field({
+	field,
+	previous,
+}: {
+	field: CrevioFormField;
+	previous?: string | string[];
+}) {
+	const labelId = `field-${field.id}`;
+	const requiredMark = field.required ? (
+		<span className="text-destructive"> *</span>
+	) : null;
+	const previousString = Array.isArray(previous) ? "" : (previous ?? "");
+	const previousArray = Array.isArray(previous) ? previous : [];
+
+	return (
+		<div className="grid gap-2">
+			<Label htmlFor={labelId}>
+				{field.name}
+				{requiredMark}
+			</Label>
+
+			{(field.fieldType === "email" ||
+				field.fieldType === "text" ||
+				field.fieldType === "phone") && (
+				<Input
+					id={labelId}
+					name={field.id}
+					type={field.fieldType === "phone" ? "tel" : field.fieldType}
+					required={field.required ?? false}
+					autoComplete={
+						field.fieldType === "email"
+							? "email"
+							: field.fieldType === "phone"
+								? "tel"
+								: undefined
+					}
+					defaultValue={previousString}
+				/>
+			)}
+
+			{field.fieldType === "textarea" && (
+				<Textarea
+					id={labelId}
+					name={field.id}
+					rows={5}
+					required={field.required ?? false}
+					defaultValue={previousString}
+				/>
+			)}
+
+			{field.fieldType === "select" && (
+				<NativeSelect
+					id={labelId}
+					name={field.id}
+					required={field.required ?? false}
+					defaultValue={previousString}
+					className="w-full"
+				>
+					<NativeSelectOption value="">Select…</NativeSelectOption>
+					{field.options.map((option) => (
+						<NativeSelectOption key={option} value={option}>
+							{option}
+						</NativeSelectOption>
+					))}
+				</NativeSelect>
+			)}
+
+			{field.fieldType === "radio" && (
+				<RadioGroup
+					name={field.id}
+					defaultValue={previousString}
+					required={field.required ?? false}
+				>
+					{field.options.map((option, i) => {
+						const optionId = `${labelId}-${i}`;
+						return (
+							<label
+								key={option}
+								htmlFor={optionId}
+								className="flex items-center gap-2 text-sm"
+							>
+								<RadioGroupItem id={optionId} value={option} />
+								{option}
+							</label>
+						);
+					})}
+				</RadioGroup>
+			)}
+
+			{field.fieldType === "checkbox" && (
+				<div className="grid gap-2">
+					{field.options.map((option, i) => {
+						const optionId = `${labelId}-${i}`;
+						return (
+							<label
+								key={option}
+								htmlFor={optionId}
+								className="flex items-center gap-2 text-sm"
+							>
+								<Checkbox
+									id={optionId}
+									name={field.id}
+									value={option}
+									defaultChecked={previousArray.includes(option)}
+								/>
+								{option}
+							</label>
+						);
+					})}
+				</div>
+			)}
+		</div>
+	);
+}

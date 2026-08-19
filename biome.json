@@ -1,5 +1,5 @@
 {
-	"$schema": "https://biomejs.dev/schemas/2.5.7/schema.json",
+	"$schema": "https://biomejs.dev/schemas/2.5.9/schema.json",
 	"vcs": {
 		"enabled": true,
 		"clientKind": "git",
@@ -17,6 +17,7 @@
 			"!**/*.css",
 			"!cloudflare-env.d.ts",
 			"!worker-configuration.d.ts",
+			"!**/routeTree.gen.ts",
 			"!.*"
 		]
 	},
@@ -36,12 +37,6 @@
 			"preset": "recommended"
 		}
 	},
-	"overrides": [
-		{
-			"includes": ["src/components/ui/**"],
-			"linter": { "enabled": false }
-		}
-	],
 	"javascript": {
 		"formatter": {
 			"quoteStyle": "double"

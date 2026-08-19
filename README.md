@@ -55,7 +55,7 @@ bun run dev
 
 This project is built with:
 
-- [Next.js 16](https://nextjs.org/) (via [vinext](https://www.npmjs.com/package/vinext)) — App Router, RSC, and SSR on Vite
+- [TanStack Start](https://tanstack.com/start) — type-safe file-based routing, loaders, and SSR on Vite
 - [React 19](https://react.dev/) — UI components
 - [@crevio/sdk](https://www.npmjs.com/package/@crevio/sdk) — data fetching from your Crevio account
 - [Shadcn/UI](https://ui.shadcn.com/) — accessible component primitives
@@ -87,9 +87,10 @@ Read more here: [Cloudflare Custom Domains](https://developers.cloudflare.com/wo
 
 | Command | Description |
 |---------|-------------|
-| `bun run dev` | Start development server (vinext) |
+| `bun run dev` | Start development server (Vite) |
 | `bun run build` | Production build |
-| `bun run start` | Run the production build locally |
+| `bun run start` | Preview the production build locally |
+| `bun run preflight` | Boot the built worker in workerd before deploying |
 | `bun run deploy` | Build and deploy to Cloudflare Workers |
 | `bun run typecheck` | Generate Cloudflare types and run TypeScript checks |
 | `bun run check` | Run Biome (lint + format, auto-fix) |

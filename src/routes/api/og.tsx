@@ -27,20 +27,34 @@ const COLORS = {
 // 1200×630 is the universal social-card size. Keep it.
 const SIZE = { width: 1200, height: 630 };
 
-// Satori needs real font data. Fetched once per worker instance rather than per
-// render — a module-level `const` would fetch at startup, which the Workers
-// runtime forbids.
-let fontData: Promise<ArrayBuffer> | null = null;
-
 // Imported lazily: `workers-og` statically pulls in ~1.5MB of resvg/yoga wasm,
 // and a static import here would put it in the route-tree chunk every request
 // loads. Only this handler ever needs it.
 const og = () => import("workers-og");
 
-async function font(): Promise<ArrayBuffer> {
-	fontData ??= og().then((m) =>
-		m.loadGoogleFont({ family: "Inter", weight: 600 }),
-	);
+// workers-og's own loadGoogleFont() reads `caches.default`, which a deployed
+// site — a Workers for Platforms user Worker — is denied, 500ing the card. The
+// ancient UA makes Google serve truetype; Satori can't read woff2.
+const FONT_CSS =
+	"https://fonts.googleapis.com/css2?family=Inter:wght@600&subset=latin";
+const TRUETYPE_UA =
+	"Mozilla/5.0 (Macintosh; U; Intel Mac OS X 10_6_8) AppleWebKit/533.21.1 (KHTML, like Gecko) Version/5.0.5 Safari/533.21.1";
+
+let fontData: Promise<ArrayBuffer> | null = null;
+
+function font(): Promise<ArrayBuffer> {
+	fontData ??= fetch(FONT_CSS, { headers: { "User-Agent": TRUETYPE_UA } })
+		.then((r) => r.text())
+		.then((css) => {
+			const url = css.match(/url\((.+?)\) format\('truetype'\)/)?.[1];
+			if (!url) throw new Error("No truetype src in Google Fonts CSS");
+			return fetch(url);
+		})
+		.then((r) => r.arrayBuffer())
+		.catch((e) => {
+			fontData = null; // never memoize a rejection
+			throw e;
+		});
 	return fontData;
 }
 

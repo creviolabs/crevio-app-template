@@ -66,7 +66,7 @@ export const Route = createFileRoute("/api/og")({
 > - Only **flexbox** and a CSS subset — no `display: grid`, no float.
 > - Every element with multiple children needs an explicit `display: flex`.
 > - **No glyph outside the loaded font's coverage** (emoji, ★, →, non-Latin scripts). Satori fetches a fallback font at render time; on Cloudflare Workers that fetch 400s and the card 500s. Fix: use words/numbers (`4.9/5`, not `★ 4.9`) or inline `<svg>`, sanitize store-supplied text (see `ogSafe()` in the route), or load a font covering the glyphs.
-> - Fonts are explicit: fetch a `.woff`/`.ttf` as an `ArrayBuffer` and pass it via `fonts`. The template uses `loadGoogleFont({ family: "Inter", weight: 600 })`, memoized per isolate — never fetch it per render.
+> - Fonts are explicit: fetch a `.woff`/`.ttf` as an `ArrayBuffer` and pass it via `fonts`, memoized per isolate — never fetch it per render. **Do not call `workers-og`'s `loadGoogleFont()`**: it reads `caches.default`, which a deployed site (a Workers for Platforms user Worker) is denied, so the card 500s in production while working in dev. The route fetches the Google Fonts CSS itself — copy that helper.
 > - Keep it self-contained: this runs in an isolated rendering context, not your React tree.
 
 ## Platform Specifications

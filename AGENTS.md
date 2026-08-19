@@ -39,7 +39,7 @@ src/
                 #   _marketing / _auth / _gated are pathless layouts:
                 #   chrome + gating, no URL segment of their own
   components/   # shared components; components/ui is Shadcn, do not edit
-  lib/          # data, session, cache, seo, helpers
+  lib/          # data, session, seo, helpers
   hooks/
   config/       # features.ts
   styles/       # app.css
@@ -92,9 +92,9 @@ Everything in `src/lib/data.ts` is a **server function** (`createServerFn`): it 
 
 Never call the SDK from a component. Add a new read to `src/lib/data.ts` and load it from a route.
 
-`get`-style readers throw `notFound()` for a slug the API doesn't have, so a loader just calls them — no `.catch(() => null)` then `throw notFound()`. Use `getAccountOrNull()` for chrome that must render regardless. Concurrent identical reads in one render collapse into a single origin fetch (`src/lib/cache.ts`), so a layout and its child both reading the account cost one request.
+`get`-style readers throw `notFound()` for a slug the API doesn't have, so a loader just calls them — no `.catch(() => null)` then `throw notFound()`. Use `getAccountOrNull()` for chrome that must render regardless. A route that needs data its parent layout already loaded should read it off `parentMatchPromise` rather than fetching it again — nothing dedupes reads for you.
 
-There is no per-site response cache. Duplicate reads *within one request* collapse into a single origin call (`src/lib/cache.ts`), so a layout and its child both reading the account cost one request — but nothing is persisted between requests. Response caching belongs at the origin, not in a per-tenant KV namespace.
+There is no response cache of any kind — every read is a live call. Response caching belongs at the origin, not in a per-tenant KV namespace, so the template does not carry one. Avoid duplicate reads by shape instead: load in the highest route that needs the data and pass it down via `parentMatchPromise`.
 
 ## Metadata
 

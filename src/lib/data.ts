@@ -4,8 +4,6 @@
  * They run in-process during SSR and over an RPC on client-side navigation, so
  * the API key never reaches the browser. Route `loader`s call these; nothing
  * else should talk to the SDK directly.
- *
- * The value passed to `createCrevioClient` is the cache window (see lib/cache).
  */
 import { notFound } from "@tanstack/react-router";
 import { createServerFn } from "@tanstack/react-start";

@@ -17,8 +17,8 @@ import { breadcrumbJsonLd, jsonLd, seo } from "@/lib/seo";
 import { getAppUrl } from "@/lib/site-url";
 
 export const Route = createFileRoute("/_marketing/products/$slug")({
-	// Independent reads — serialising them would double the round-trips on a
-	// cache miss. `getProduct` throws notFound() for an unknown slug.
+	// Independent reads — serialising them would double the round-trips.
+	// `getProduct` throws notFound() for an unknown slug.
 	loader: async ({ params }) => {
 		const [product, productList] = await Promise.all([
 			getProduct({ data: { slug: params.slug, expand: "reviews" } }),

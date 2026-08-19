@@ -66,7 +66,7 @@ export const Route = createFileRoute("/api/og")({
 		handlers: {
 			GET: async () => {
 				const { ImageResponse } = await og();
-				// Reuse the same cached loader the pages use — no extra API round-trips.
+				// Same reader the pages use.
 				const account = await getAccountOrNull();
 
 				const name = ogSafe(account?.name ?? "") || "Crevio";

@@ -13,8 +13,8 @@ export type FetchSlotsResult =
 	| { status: "error"; message: string };
 
 /**
- * Availability is real-time and timezone-specific, so it deliberately skips the
- * cached `lib/data.ts` layer and resolves live on each request.
+ * Availability is real-time and timezone-specific, so it resolves live rather
+ * than going through the shared readers in `lib/data.ts`.
  */
 export const fetchAvailableSlots = createServerFn({ method: "GET" })
 	.validator(

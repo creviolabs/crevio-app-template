@@ -75,11 +75,20 @@ export interface AccessResult {
 	expiresAt: string | null;
 }
 
+export type ViewerKind = "member" | "platform";
+
 export interface Viewer extends CrevioUser {
+	/** A `member` is one of this store's customers (cus_…); `platform` is Crevio staff (user_…). */
+	kind: ViewerKind;
 	name: string | null;
 	firstName: string | null;
 	lastName: string | null;
 	email: string | null;
+}
+
+// Crevio prefix ids are their own id space, so the prefix is authoritative.
+function viewerKind(session: CrevioUser): ViewerKind {
+	return session.userId.startsWith("cus_") ? "member" : "platform";
 }
 
 // Verifying the token is an Ed25519 signature check, and one render resolves the
@@ -101,9 +110,16 @@ function getSession(): Promise<CrevioUser | null> {
 
 	const resolved = (async () => {
 		// Defaults to Crevio's production keys inside the SDK; override with
-		// CREVIO_JWKS_URL when pointing at another environment.
+		// CREVIO_JWKS_URL when pointing at another environment. CREVIO_SITE_AUDIENCE
+		// is set by every Crevio deploy; when present the SDK rejects a token minted
+		// for any other site, so the guarantee holds even with no dispatch worker
+		// in front (an app hosted elsewhere).
 		const jwksUrl = process.env.CREVIO_JWKS_URL || undefined;
-		const verified = await verifyUserToken(getRequestHeaders(), { jwksUrl });
+		const audience = process.env.CREVIO_SITE_AUDIENCE || undefined;
+		const verified = await verifyUserToken(getRequestHeaders(), {
+			jwksUrl,
+			audience,
+		});
 		return verified ?? devSession();
 	})();
 
@@ -123,6 +139,7 @@ async function getViewer(session: CrevioUser): Promise<Viewer> {
 		});
 		return {
 			...session,
+			kind: viewerKind(session),
 			name:
 				[profile.firstName, profile.lastName].filter(Boolean).join(" ") || null,
 			firstName: profile.firstName ?? null,
@@ -132,6 +149,7 @@ async function getViewer(session: CrevioUser): Promise<Viewer> {
 	} catch {
 		return {
 			...session,
+			kind: viewerKind(session),
 			name: null,
 			firstName: null,
 			lastName: null,
@@ -176,6 +194,18 @@ async function getAccess(
 		// crash the page or grant access.
 		return denied;
 	}
+}
+
+/**
+ * Where "Log out" sends the visitor: the dispatch worker's reserved sign-out
+ * path on this same host. It clears the session cookie that only the worker
+ * can clear (host-only, HttpOnly) and returns to `returnToPath`. Nothing here
+ * touches the visitor's Crevio account — it ends the session on this site.
+ */
+export const SIGN_OUT_PATH = "/__crevio/auth/logout";
+
+export function signOutUrl(returnToPath = "/"): string {
+	return `${SIGN_OUT_PATH}?return_to=${encodeURIComponent(returnToPath)}`;
 }
 
 /**

@@ -15,6 +15,7 @@ import {
 	SidebarMenuItem,
 	useSidebar,
 } from "@/components/ui/sidebar";
+import { signOutUrl } from "@/lib/session";
 
 function initials(name: string): string {
 	const parts = name.trim().split(/\s+/).filter(Boolean);
@@ -80,7 +81,9 @@ export function NavUser({
 							</DropdownMenuItem>
 						</DropdownMenuGroup>
 						<DropdownMenuSeparator />
-						<DropdownMenuItem>
+						{/* A full navigation, not a fetch: the cookie is cleared by a
+						    Set-Cookie on the redirect, which only a top-level request applies. */}
+						<DropdownMenuItem render={<a href={signOutUrl("/")} />}>
 							<LogOutIcon />
 							Log out
 						</DropdownMenuItem>

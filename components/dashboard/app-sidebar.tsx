@@ -18,12 +18,14 @@ import {
 
 interface AppSidebarProps extends React.ComponentProps<typeof Sidebar> {
 	user: { name: string; email: string; avatar: string };
+	signOutUrl: string;
 	storeName?: string;
 	supportEmail?: string | null;
 }
 
 export function AppSidebar({
 	user,
+	signOutUrl,
 	storeName = "Members",
 	supportEmail,
 	...props
@@ -80,7 +82,7 @@ export function AppSidebar({
 			</SidebarContent>
 
 			<SidebarFooter>
-				<NavUser user={user} />
+				<NavUser user={user} signOutUrl={signOutUrl} />
 			</SidebarFooter>
 			<SidebarRail />
 		</Sidebar>

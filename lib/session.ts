@@ -24,6 +24,11 @@ import { createCrevioClient } from "./crevio-client";
 // SDK; override with CREVIO_JWKS_URL when pointing at another environment.
 const jwksUrl = process.env.CREVIO_JWKS_URL || undefined;
 
+// The token `aud` this site insists on. Set by every Crevio deploy; when present
+// the SDK rejects a token minted for any other site, so the guarantee holds even
+// with no dispatch worker in front (an app hosted elsewhere).
+const audience = process.env.CREVIO_SITE_AUDIENCE || undefined;
+
 const isDev = process.env.NODE_ENV !== "production";
 
 // A synthetic viewer used only in dev when nothing else identifies the visitor,
@@ -77,15 +82,27 @@ export interface AccessResult {
  * Identity only — never the entitlement. Fail-closed to anonymous. Memoized.
  */
 export const getSession = cache(async (): Promise<CrevioUser | null> => {
-	const verified = await verifyUserToken(await headers(), { jwksUrl });
+	const verified = await verifyUserToken(await headers(), {
+		jwksUrl,
+		audience,
+	});
 	return verified ?? devSession();
 });
 
+export type ViewerKind = "member" | "platform";
+
 export interface Viewer extends CrevioUser {
+	/** A `member` is one of this store's customers (cus_…); `platform` is Crevio staff (user_…). */
+	kind: ViewerKind;
 	name: string | null;
 	firstName: string | null;
 	lastName: string | null;
 	email: string | null;
+}
+
+// Crevio prefix ids are their own id space, so the prefix is authoritative.
+function viewerKind(session: CrevioUser): ViewerKind {
+	return session.userId.startsWith("cus_") ? "member" : "platform";
 }
 
 /**
@@ -103,6 +120,7 @@ export const getViewer = cache(async (): Promise<Viewer | null> => {
 		const profile = await crevio.users.get({ id: session.userId });
 		return {
 			...session,
+			kind: viewerKind(session),
 			name:
 				[profile.firstName, profile.lastName].filter(Boolean).join(" ") || null,
 			firstName: profile.firstName ?? null,
@@ -112,6 +130,7 @@ export const getViewer = cache(async (): Promise<Viewer | null> => {
 	} catch {
 		return {
 			...session,
+			kind: viewerKind(session),
 			name: null,
 			firstName: null,
 			lastName: null,
@@ -218,4 +237,17 @@ export async function signInUrl(returnToPath = "/"): Promise<string> {
 	const url = new URL(base);
 	url.searchParams.set("return_to", returnTo);
 	return url.toString();
+}
+
+// Where "Log out" sends the visitor: the dispatch worker's reserved sign-out
+// path on this same host. It clears the session cookie only the worker can
+// clear (host-only, HttpOnly) and returns to `returnToPath`. It ends the
+// session on this site only — never the visitor's Crevio account.
+//
+// A plain relative URL, so server layouts can hand it to client components as
+// a prop; this module itself (next/headers) can't be imported from one.
+export const SIGN_OUT_PATH = "/__crevio/auth/logout";
+
+export function signOutUrl(returnToPath = "/"): string {
+	return `${SIGN_OUT_PATH}?return_to=${encodeURIComponent(returnToPath)}`;
 }

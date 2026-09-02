@@ -26,12 +26,14 @@ function initials(name: string): string {
 
 export function NavUser({
 	user,
+	signOutUrl,
 }: {
 	user: {
 		name: string;
 		email: string;
 		avatar: string;
 	};
+	signOutUrl: string;
 }) {
 	const { isMobile } = useSidebar();
 	return (
@@ -82,7 +84,9 @@ export function NavUser({
 							</DropdownMenuItem>
 						</DropdownMenuGroup>
 						<DropdownMenuSeparator />
-						<DropdownMenuItem>
+						{/* A full navigation, not a fetch: the cookie is cleared by a
+						    Set-Cookie on the redirect, which only a top-level request applies. */}
+						<DropdownMenuItem render={<a href={signOutUrl} />}>
 							<LogOutIcon />
 							Log out
 						</DropdownMenuItem>

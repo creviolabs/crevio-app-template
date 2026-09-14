@@ -37,11 +37,21 @@ export async function getActiveProducts(
 	});
 }
 
+// The catalog is account-wide and this reads by slug, so the storefront's own
+// accessor is where a product the merchant has not published stops: the API key
+// here is the account's, and the API answers for drafts by design.
 export async function getProduct(slugOrId: string, expand?: string) {
 	"use cache";
 	cacheLife("minutes");
 	const crevio = createCrevioClient();
-	return crevio.products.get({ idOrSlug: slugOrId, ...(expand && { expand }) });
+	const product = await crevio.products.get({
+		idOrSlug: slugOrId,
+		...(expand && { expand }),
+	});
+	if (product.status !== "active") {
+		throw new Error(`Product ${slugOrId} is not published`);
+	}
+	return product;
 }
 
 export async function getBlogPosts() {

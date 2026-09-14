@@ -9,7 +9,12 @@ import {
 import { TooltipProvider } from "@/components/ui/tooltip";
 import { requireFeature } from "@/config/features";
 import { getAccount } from "@/lib/data";
-import { getViewer, requireSession, signOutUrl } from "@/lib/session";
+import {
+	billingUrl,
+	getViewer,
+	requireSession,
+	signOutUrl,
+} from "@/lib/session";
 
 // The whole /dashboard group is gated here, once, at the layout — pages inside
 // never repeat auth. The auth-dependent shell lives in <Suspense> because it
@@ -44,6 +49,7 @@ async function GatedShell({ children }: { children: React.ReactNode }) {
 				storeName={account?.name ?? "Members"}
 				supportEmail={account?.supportEmail}
 				signOutUrl={signOutUrl("/")}
+				billingUrl={billingUrl()}
 				user={{
 					name: viewer?.name?.trim() || "Member",
 					email: viewer?.email ?? "",

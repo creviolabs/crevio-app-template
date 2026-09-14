@@ -251,3 +251,11 @@ export const SIGN_OUT_PATH = "/__crevio/auth/logout";
 export function signOutUrl(returnToPath = "/"): string {
 	return `${SIGN_OUT_PATH}?return_to=${encodeURIComponent(returnToPath)}`;
 }
+
+// The member's billing page on billing.crevio.co, opened by the dispatch worker.
+// Link with a full navigation; its Return link comes back to `returnToPath`.
+export const BILLING_PATH = "/__crevio/billing";
+
+export function billingUrl(returnToPath = "/dashboard"): string {
+	return `${BILLING_PATH}?return_to=${encodeURIComponent(returnToPath)}`;
+}

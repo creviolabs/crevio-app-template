@@ -27,6 +27,7 @@ function initials(name: string): string {
 export function NavUser({
 	user,
 	signOutUrl,
+	billingUrl,
 }: {
 	user: {
 		name: string;
@@ -34,6 +35,7 @@ export function NavUser({
 		avatar: string;
 	};
 	signOutUrl: string;
+	billingUrl: string;
 }) {
 	const { isMobile } = useSidebar();
 	return (
@@ -78,7 +80,7 @@ export function NavUser({
 						</DropdownMenuGroup>
 						<DropdownMenuSeparator />
 						<DropdownMenuGroup>
-							<DropdownMenuItem>
+							<DropdownMenuItem render={<a href={billingUrl} />}>
 								<CreditCardIcon />
 								Billing
 							</DropdownMenuItem>

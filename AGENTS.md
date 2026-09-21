@@ -64,6 +64,15 @@ See the `crevio-api` skill — it fetches the canonical hosted manifest at `http
 
 Crevio components render a "not available" fallback unless wired to a record you create FIRST via the `crevio_api` MCP — `<CrevioForm formId>` from `POST /v1/forms` (`form_…`), `<CrevioBooking eventTypeId>` from `POST /v1/event-types` (`etype_…`). Bind the `form_…`/`etype_…` id it returns. `bun run check:wiring` fails the build on an unwired one a route renders; an orphan nothing imports only warns, so delete it rather than switching the whole feature off.
 
+## Webhooks
+
+`app/api/webhooks/crevio/route.ts` already verifies Crevio's signature (Standard Webhooks, via the `standardwebhooks` library) — never write your own HMAC check, and never add a second, unverified route. To react to something that happens in Crevio (an order is paid, a lead arrives):
+
+1. Create the endpoint with `POST /v1/webhook_endpoints` — `url` is `<site url>/api/webhooks/crevio`, `enabled_events` only the types you handle.
+2. Save the `secret` from that response as the site secret `CREVIO_WEBHOOK_SECRET`. It is shown once; it never goes in the repo or `wrangler.jsonc`.
+3. Add a `case` to `handleEvent`. The resource is `event.data.object`, exactly as its `GET` endpoint returns it; `event.id` is the same on every retry, so dedupe on it before anything that must happen once.
+4. Deploy, then prove it: `POST /v1/webhook_endpoints/{id}/test?event_type=<type>` must answer `"delivered": true`. A `response_code` of `401` means the secret is wrong; `503` means it is not set.
+
 ## Skills
 
 Skills live in `.claude/skills/` — load the relevant `SKILL.md` before working in its area.

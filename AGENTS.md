@@ -71,7 +71,7 @@ Crevio components render a "not available" fallback unless wired to a record you
 1. Create the endpoint with `POST /v1/webhook_endpoints` — `url` is `<site url>/api/webhooks/crevio`, `enabled_events` only the types you handle.
 2. Save the `secret` from that response as the site secret `CREVIO_WEBHOOK_SECRET`. It is shown once; it never goes in the repo or `wrangler.jsonc`.
 3. Add a `case` to `handleEvent`. The resource is `event.data.object`, exactly as its `GET` endpoint returns it; `event.id` is the same on every retry, so dedupe on it before anything that must happen once.
-4. Deploy, then prove it: `POST /v1/webhook_endpoints/{id}/test?event_type=<type>` must answer `"delivered": true`. A `response_code` of `401` means the secret is wrong; `503` means it is not set.
+4. Deploy, then prove it: `POST /v1/webhook_endpoints/{id}/test?event_type=<type>` must answer `"delivered": true`. A `response_code` of `401` means the secret is wrong; `503` means it is not set. A test delivery carries `"test": true` and an **empty** `data.object`, which the route already acknowledges before `handleEvent` — so never make a handler's own validation decide a test's outcome.
 
 ## Skills
 

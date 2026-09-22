@@ -5,6 +5,7 @@ export const dynamic = "force-dynamic";
 interface CrevioEvent {
 	id: string;
 	type: string;
+	test?: boolean;
 	api_version: string;
 	created_at: string;
 	data: { object: Record<string, unknown> } & Record<string, unknown>;
@@ -42,6 +43,9 @@ export async function POST(request: Request) {
 		return Response.json({ error: "invalid signature" }, { status: 401 });
 	}
 
-	await handleEvent(event);
+	// A test delivery carries an empty `data.object`, so there is nothing to act
+	// on: the signature having checked out is the whole result.
+	if (!event.test) await handleEvent(event);
+
 	return new Response(null, { status: 204 });
 }

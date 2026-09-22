@@ -14,17 +14,14 @@ const BODY = JSON.stringify({
 
 function delivery(body = BODY, signedBody = BODY) {
 	const sentAt = new Date();
+	const id = (JSON.parse(signedBody) as { id: string }).id;
 	return new Request("https://site.test/api/webhooks/crevio", {
 		method: "POST",
 		body,
 		headers: {
-			"webhook-id": "whev_123",
+			"webhook-id": id,
 			"webhook-timestamp": String(Math.floor(sentAt.getTime() / 1000)),
-			"webhook-signature": new Webhook(SECRET).sign(
-				"whev_123",
-				sentAt,
-				signedBody,
-			),
+			"webhook-signature": new Webhook(SECRET).sign(id, sentAt, signedBody),
 		},
 	});
 }
@@ -61,5 +58,24 @@ describe("POST /api/webhooks/crevio", () => {
 
 	test("says so when the signing secret has not been set", async () => {
 		expect((await POST(delivery())).status).toBe(503);
+	});
+});
+
+describe("test deliveries", () => {
+	test("a test event is acknowledged without being handled", async () => {
+		process.env.CREVIO_WEBHOOK_SECRET = SECRET;
+		const body = JSON.stringify({
+			id: "whev_test_1",
+			object: "event",
+			type: "order.paid",
+			api_version: "v1",
+			created_at: "2026-09-21T10:00:00Z",
+			test: true,
+			data: { object: {} },
+		});
+
+		const response = await POST(delivery(body, body));
+
+		expect(response.status).toBe(204);
 	});
 });

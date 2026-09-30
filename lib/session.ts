@@ -31,6 +31,11 @@ const audience = process.env.CREVIO_SITE_AUDIENCE || undefined;
 
 const isDev = process.env.NODE_ENV !== "production";
 
+// Crevio prefix ids are their own id space, so the prefix is authoritative.
+function viewerKind(userId: string): ViewerKind {
+	return userId.startsWith("cus_") ? "member" : "platform";
+}
+
 // A synthetic viewer used only in dev when nothing else identifies the visitor,
 // so an agent (or human) iterating on the template sees the full gated
 // experience with zero configuration. getAccess grants this sentinel identity
@@ -38,6 +43,7 @@ const isDev = process.env.NODE_ENV !== "production";
 const PREVIEW_USER: CrevioUser = {
 	userId: "usr_preview",
 	accountId: "acct_preview",
+	kind: "platform",
 };
 
 let warnedPreview = false;
@@ -52,7 +58,8 @@ let warnedPreview = false;
 function devSession(): CrevioUser | null {
 	const userId = process.env.CREVIO_DEV_USER;
 	const accountId = process.env.CREVIO_DEV_ACCOUNT;
-	if (userId && accountId) return { userId, accountId };
+	if (userId && accountId)
+		return { userId, accountId, kind: viewerKind(userId) };
 	if (!isDev) return null;
 
 	if (!warnedPreview) {
@@ -100,11 +107,6 @@ export interface Viewer extends CrevioUser {
 	email: string | null;
 }
 
-// Crevio prefix ids are their own id space, so the prefix is authoritative.
-function viewerKind(session: CrevioUser): ViewerKind {
-	return session.userId.startsWith("cus_") ? "member" : "platform";
-}
-
 /**
  * The signed-in visitor's profile (name/email), fetched fresh from the Crevio
  * API by id — the Whop `users.retrieve` pattern. The trusted header only carries
@@ -120,7 +122,7 @@ export const getViewer = cache(async (): Promise<Viewer | null> => {
 		const profile = await crevio.users.get({ id: session.userId });
 		return {
 			...session,
-			kind: viewerKind(session),
+			kind: viewerKind(session.userId),
 			name:
 				[profile.firstName, profile.lastName].filter(Boolean).join(" ") || null,
 			firstName: profile.firstName ?? null,
@@ -130,7 +132,7 @@ export const getViewer = cache(async (): Promise<Viewer | null> => {
 	} catch {
 		return {
 			...session,
-			kind: viewerKind(session),
+			kind: viewerKind(session.userId),
 			name: null,
 			firstName: null,
 			lastName: null,

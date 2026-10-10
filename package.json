@@ -12,7 +12,7 @@
 		"dev": "vp dev",
 		"start": "vinext start",
 		"postinstall": "bun run cf-typegen",
-		"typecheck": "bun run cf-typegen && tsc",
+		"typecheck": "bun run cf-typegen && bun --check",
 		"check": "biome check --write --unsafe .",
 		"test": "bun test"
 	},

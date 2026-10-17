@@ -4,7 +4,7 @@
 	"version": "0.0.0",
 	"type": "module",
 	"scripts": {
-		"build": "bun run check:wiring && bun run typecheck && vinext build",
+		"build": "bun run check:wiring && bun run typecheck && bun --bun vinext build",
 		"check:wiring": "bun scripts/check-wiring.ts",
 		"preflight": "bun scripts/preflight.ts",
 		"cf-typegen": "wrangler types",

@@ -6,6 +6,7 @@ interface CrevioEvent {
 	id: string;
 	type: string;
 	test?: boolean;
+	livemode: boolean;
 	api_version: string;
 	created_at: string;
 	data: { object: Record<string, unknown> } & Record<string, unknown>;

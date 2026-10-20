@@ -1,6 +1,10 @@
 import type { MetadataRoute } from "next";
 import { type FeatureKey, features } from "@/config/features";
-import { getBlogPosts, getLegalPages } from "@/lib/data";
+import {
+	getAllActiveProducts,
+	getAllBlogPosts,
+	getLegalPages,
+} from "@/lib/data";
 import { getAppUrl } from "@/lib/site-url";
 import { discoverStaticRoutes } from "@/lib/sitemap-routes";
 
@@ -32,21 +36,27 @@ const STATIC_CHANGE_FREQUENCY: MetadataRoute.Sitemap[number]["changeFrequency"] 
 	"daily";
 
 // Dynamic content sources. Add a new entry here to include another content type.
-// `fetch` should return `{ data: Array<{ slug: string; updatedAt?: Date | string }> }`.
+// `fetch` should return `Array<{ slug: string; updatedAt?: Date | string }>`.
 type DynamicItem = { slug: string; updatedAt?: Date | string };
 type DynamicSource = {
 	basePath: string;
-	fetch: () => Promise<{ data: DynamicItem[] }>;
+	fetch: () => Promise<DynamicItem[]>;
 	priority: number;
 	changeFrequency: MetadataRoute.Sitemap[number]["changeFrequency"];
 };
 
 const DYNAMIC_SOURCES: DynamicSource[] = [
+	{
+		basePath: "/products",
+		fetch: getAllActiveProducts,
+		priority: 0.8,
+		changeFrequency: "weekly",
+	},
 	...(features.blog
 		? [
 				{
 					basePath: "/blog",
-					fetch: getBlogPosts,
+					fetch: getAllBlogPosts,
 					priority: 0.7,
 					changeFrequency: "weekly" as const,
 				},
@@ -56,7 +66,7 @@ const DYNAMIC_SOURCES: DynamicSource[] = [
 		? [
 				{
 					basePath: "/legal",
-					fetch: getLegalPages,
+					fetch: () => getLegalPages().then((list) => list.data),
 					priority: 0.3,
 					changeFrequency: "monthly" as const,
 				},
@@ -81,7 +91,7 @@ export default async function sitemap(): Promise<MetadataRoute.Sitemap> {
 	}));
 
 	DYNAMIC_SOURCES.forEach((source, index) => {
-		const items = dynamicResults[index]?.data ?? [];
+		const items = dynamicResults[index] ?? [];
 		for (const item of items) {
 			entries.push({
 				url: `${siteUrl}${source.basePath}/${item.slug}`,

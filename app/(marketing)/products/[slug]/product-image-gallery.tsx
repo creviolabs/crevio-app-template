@@ -86,6 +86,8 @@ export function ProductImageGallery({
 							key={item.url}
 							type="button"
 							onClick={() => setSelected(idx)}
+							aria-label={`Show ${productName} image ${idx + 1} of ${media.length}`}
+							aria-pressed={idx === selected}
 							className={`shrink-0 size-16 overflow-hidden rounded-lg bg-muted transition-opacity ${idx === selected ? "ring-2 ring-foreground/20" : "opacity-60 hover:opacity-100"}`}
 						>
 							<Frame item={item} alt="" />

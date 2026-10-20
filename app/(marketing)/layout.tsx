@@ -1,5 +1,6 @@
 import { Footer } from "@/components/footer";
 import { Header } from "@/components/header";
+import { JsonLd } from "@/components/json-ld";
 import { features } from "@/config/features";
 import { getAccount, getLegalPages } from "@/lib/data";
 import { getAppUrl } from "@/lib/site-url";
@@ -29,20 +30,15 @@ export default async function MarketingLayout({
 				...(account.avatarUrl && { logo: account.avatarUrl }),
 				...(account.description && { description: account.description }),
 				...(account.supportEmail && { email: account.supportEmail }),
+				...(account.socialLinks.length > 0 && {
+					sameAs: account.socialLinks.map((link) => link.url),
+				}),
 			}
 		: null;
 
 	return (
 		<div className="flex min-h-screen flex-col">
-			{organizationJsonLd && (
-				<script
-					type="application/ld+json"
-					// biome-ignore lint/security/noDangerouslySetInnerHtml: structured data
-					dangerouslySetInnerHTML={{
-						__html: JSON.stringify(organizationJsonLd),
-					}}
-				/>
-			)}
+			{organizationJsonLd && <JsonLd data={organizationJsonLd} />}
 			<Header
 				name={account?.name ?? "Store"}
 				avatarUrl={account?.avatarUrl ?? null}

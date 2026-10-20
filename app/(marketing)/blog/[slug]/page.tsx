@@ -4,6 +4,7 @@ import type { Metadata } from "next";
 import Link from "next/link";
 import { notFound } from "next/navigation";
 import { CtaSection } from "@/components/forms/cta-section";
+import { BreadcrumbJsonLd, JsonLd } from "@/components/json-ld";
 import { features, requireFeature } from "@/config/features";
 import { getAccount, getBlogPost } from "@/lib/data";
 import { getAppUrl } from "@/lib/site-url";
@@ -60,38 +61,7 @@ function BlogPostJsonLd({
 		publisher: { "@type": "Organization", name: accountName },
 	};
 
-	return (
-		<script
-			type="application/ld+json"
-			// biome-ignore lint/security/noDangerouslySetInnerHtml: structured data
-			dangerouslySetInnerHTML={{ __html: JSON.stringify(jsonLd) }}
-		/>
-	);
-}
-
-function BreadcrumbJsonLd({
-	items,
-}: {
-	items: Array<{ name: string; url: string }>;
-}) {
-	const jsonLd = {
-		"@context": "https://schema.org",
-		"@type": "BreadcrumbList",
-		itemListElement: items.map((item, i) => ({
-			"@type": "ListItem",
-			position: i + 1,
-			name: item.name,
-			item: item.url,
-		})),
-	};
-
-	return (
-		<script
-			type="application/ld+json"
-			// biome-ignore lint/security/noDangerouslySetInnerHtml: structured data
-			dangerouslySetInnerHTML={{ __html: JSON.stringify(jsonLd) }}
-		/>
-	);
+	return <JsonLd data={jsonLd} />;
 }
 
 export default async function BlogPost({

@@ -21,7 +21,7 @@ export async function generateMetadata(): Promise<Metadata> {
 	try {
 		const account = await getAccount();
 		const description =
-			account.description || `Lear more about ${account.name}`;
+			account.description || `Learn more about ${account.name}`;
 		// No `images` — that would suppress the site-wide opengraph-image.tsx card.
 		return {
 			title: account.name,

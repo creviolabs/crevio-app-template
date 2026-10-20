@@ -4,6 +4,7 @@ import type { Metadata } from "next";
 import Image from "next/image";
 import Link from "next/link";
 import { notFound } from "next/navigation";
+import { BreadcrumbJsonLd, JsonLd } from "@/components/json-ld";
 import { ProductCard } from "@/components/product-card";
 import { Badge } from "@/components/ui/badge";
 import { buttonVariants } from "@/components/ui/button";
@@ -69,13 +70,14 @@ function ProductJsonLd({ product }: { product: Product }) {
 		.sort((a, b) => (a.amount ?? 0) - (b.amount ?? 0))[0];
 
 	const images = product.mediaGallery?.filter(isImageMedia).map((m) => m.url);
+	const url = `${getAppUrl()}/products/${product.slug}`;
 
 	const jsonLd = {
 		"@context": "https://schema.org",
 		"@type": "Product",
 		name: product.name,
 		description: product.description,
-		url: product.url,
+		url,
 		...(images && images.length > 0 && { image: images }),
 		...(product.averageRating && {
 			aggregateRating: {
@@ -90,42 +92,12 @@ function ProductJsonLd({ product }: { product: Product }) {
 				price: ((lowestVariant.amount ?? 0) / 100).toFixed(2),
 				priceCurrency: (lowestVariant.currency ?? "USD").toUpperCase(),
 				availability: "https://schema.org/InStock",
+				url,
 			},
 		}),
 	};
 
-	return (
-		<script
-			type="application/ld+json"
-			// biome-ignore lint/security/noDangerouslySetInnerHtml: structured data
-			dangerouslySetInnerHTML={{ __html: JSON.stringify(jsonLd) }}
-		/>
-	);
-}
-
-function BreadcrumbJsonLd({
-	items,
-}: {
-	items: Array<{ name: string; url: string }>;
-}) {
-	const jsonLd = {
-		"@context": "https://schema.org",
-		"@type": "BreadcrumbList",
-		itemListElement: items.map((item, i) => ({
-			"@type": "ListItem",
-			position: i + 1,
-			name: item.name,
-			item: item.url,
-		})),
-	};
-
-	return (
-		<script
-			type="application/ld+json"
-			// biome-ignore lint/security/noDangerouslySetInnerHtml: structured data
-			dangerouslySetInnerHTML={{ __html: JSON.stringify(jsonLd) }}
-		/>
-	);
+	return <JsonLd data={jsonLd} />;
 }
 
 export default async function ProductPage({

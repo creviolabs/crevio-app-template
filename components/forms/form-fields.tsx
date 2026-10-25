@@ -117,6 +117,25 @@ function Field({
 	const previousString = Array.isArray(previous) ? "" : (previous ?? "");
 	const previousArray = Array.isArray(previous) ? previous : [];
 
+	if (field.fieldType === "consent") {
+		return (
+			<label htmlFor={labelId} className="flex items-start gap-2 text-sm">
+				<Checkbox
+					id={labelId}
+					name={field.id}
+					value="true"
+					required={field.required ?? false}
+					defaultChecked={previousString === "true"}
+					className="mt-0.5"
+				/>
+				<span>
+					{field.name}
+					{requiredMark}
+				</span>
+			</label>
+		);
+	}
+
 	return (
 		<div className="grid gap-2">
 			<Label htmlFor={labelId}>

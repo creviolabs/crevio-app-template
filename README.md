@@ -85,12 +85,12 @@ Read more here: [Cloudflare Custom Domains](https://developers.cloudflare.com/wo
 
 ## All commands
 
-| Command | Description |
-|---------|-------------|
-| `bun run dev` | Start development server (vinext) |
-| `bun run build` | Production build |
-| `bun run start` | Run the production build locally |
-| `bun run deploy` | Build and deploy to Cloudflare Workers |
+| Command             | Description                                         |
+| ------------------- | --------------------------------------------------- |
+| `bun run dev`       | Start development server (vinext)                   |
+| `bun run build`     | Production build                                    |
+| `bun run start`     | Run the production build locally                    |
+| `bun run deploy`    | Build and deploy to Cloudflare Workers              |
 | `bun run typecheck` | Generate Cloudflare types and run TypeScript checks |
-| `bun run check` | Run Biome (lint + format, auto-fix) |
-| `bun run test` | Run the test suite |
+| `bun run check`     | Run Biome (lint + format, auto-fix)                 |
+| `bun run test`      | Run the test suite                                  |

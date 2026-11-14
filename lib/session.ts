@@ -31,9 +31,9 @@ const audience = process.env.CREVIO_SITE_AUDIENCE || undefined;
 
 const isDev = process.env.NODE_ENV !== "production";
 
-// Crevio prefix ids are their own id space, so the prefix is authoritative.
-function viewerKind(userId: string): ViewerKind {
-	return userId.startsWith("cus_") ? "member" : "platform";
+// Only for a dev identity set by hand: a signed token states its own kind. Contacts are con_, or cus_ from before the rename.
+function devViewerKind(userId: string): ViewerKind {
+	return userId.startsWith("con_") || userId.startsWith("cus_") ? "member" : "platform";
 }
 
 // A synthetic viewer used only in dev when nothing else identifies the visitor,
@@ -59,7 +59,7 @@ function devSession(): CrevioUser | null {
 	const userId = process.env.CREVIO_DEV_USER;
 	const accountId = process.env.CREVIO_DEV_ACCOUNT;
 	if (userId && accountId)
-		return { userId, accountId, kind: viewerKind(userId) };
+		return { userId, accountId, kind: devViewerKind(userId) };
 	if (!isDev) return null;
 
 	if (!warnedPreview) {
@@ -99,7 +99,7 @@ export const getSession = cache(async (): Promise<CrevioUser | null> => {
 export type ViewerKind = "member" | "platform";
 
 export interface Viewer extends CrevioUser {
-	/** A `member` is one of this store's customers (cus_…); `platform` is Crevio staff (user_…). */
+	/** A `member` is one of this store's contacts (con_…, or cus_… from before the rename); `platform` is Crevio staff (user_…). */
 	kind: ViewerKind;
 	name: string | null;
 	firstName: string | null;
@@ -122,7 +122,6 @@ export const getViewer = cache(async (): Promise<Viewer | null> => {
 		const profile = await crevio.users.get({ id: session.userId });
 		return {
 			...session,
-			kind: viewerKind(session.userId),
 			name:
 				[profile.firstName, profile.lastName].filter(Boolean).join(" ") || null,
 			firstName: profile.firstName ?? null,
@@ -132,7 +131,6 @@ export const getViewer = cache(async (): Promise<Viewer | null> => {
 	} catch {
 		return {
 			...session,
-			kind: viewerKind(session.userId),
 			name: null,
 			firstName: null,
 			lastName: null,

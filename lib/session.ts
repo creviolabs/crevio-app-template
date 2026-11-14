@@ -33,7 +33,9 @@ const isDev = process.env.NODE_ENV !== "production";
 
 // Only for a dev identity set by hand: a signed token states its own kind. Contacts are con_, or cus_ from before the rename.
 function devViewerKind(userId: string): ViewerKind {
-	return userId.startsWith("con_") || userId.startsWith("cus_") ? "member" : "platform";
+	return userId.startsWith("con_") || userId.startsWith("cus_")
+		? "member"
+		: "platform";
 }
 
 // A synthetic viewer used only in dev when nothing else identifies the visitor,
